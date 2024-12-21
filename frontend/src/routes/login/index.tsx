@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -6,6 +6,8 @@ import { useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { Eye, EyeOff } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import axiosFetch from '@/lib/axios'
+import LoadingSpinner from '@/components/common/LoadingSpinner'
 
 export const Route = createFileRoute('/login/')({
   component: RouteComponent,
@@ -18,10 +20,29 @@ type LoginStateType = {
 
 function RouteComponent() {
   const [showPassword, setShowPassword] = useState(false)
-  const { register, handleSubmit, formState: { errors } } = useForm<LoginStateType>()
-  
-  const onSubmit: SubmitHandler<LoginStateType> = (data) => {
-    console.log(data)
+  const [isLoading, setIsLoading] = useState(false)
+  const { register, setError,  handleSubmit, formState: { errors } } = useForm<LoginStateType>()
+  const navigate = useNavigate()
+
+  const onSubmit: SubmitHandler<LoginStateType> = async (data) => {
+    setIsLoading(true)
+    try {
+      const response = await axiosFetch.post('/auth/login', data);
+      
+      localStorage.setItem('access_token', response.data.access_token);
+      localStorage.setItem('refresh_token', response.data.refresh_token);
+      
+      navigate({ to: '/'})
+    } catch (e: any) {
+      if (e.response?.status === 400) {
+        setError(e.response.data.name, {
+          type: 'manual',
+          message: e.response.data.message,
+        });
+      }
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -32,7 +53,7 @@ function RouteComponent() {
           <CardHeader>
             <CardTitle>Login</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className='space-y-4'>
               <div className="grid w-full max-w-sm items-center gap-1.5">
                 <Label htmlFor="username">Username</Label>
                 <div>
@@ -55,10 +76,16 @@ function RouteComponent() {
                   </div>
                   {errors.password && <span className='text-red-500 font-medium text-sm'>{errors.password.message}</span>}
                 </div>
+                <p className='text-sm font-medium '>Already have an Account?  {" "}
+                  <Link className='text-blue-500 underline-offset-4  hover:text-blue-700 hover:underline' to='/signup'>Sign Up</Link>
+                </p>
               </div>
           </CardContent>
+
           <CardFooter>
-            <Button>Login</Button>
+            <Button type="submit" className='w-full' disabled={isLoading}>
+              {isLoading ? <LoadingSpinner /> : "Login"}
+            </Button>
           </CardFooter>
 
         </form>

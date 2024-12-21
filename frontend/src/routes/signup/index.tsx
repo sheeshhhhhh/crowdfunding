@@ -2,7 +2,8 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { createFileRoute } from '@tanstack/react-router'
+import axiosFetch from '@/lib/axios'
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { Eye, EyeOff } from 'lucide-react'
 import { useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
@@ -22,17 +23,30 @@ function RouteComponent() {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const { register, handleSubmit, setError, formState: { errors } } = useForm<SignUpStateType>();
+  const navigate = useNavigate({ from: '/signup' })
 
-  const onSubmit: SubmitHandler<SignUpStateType> = (data) => {
-    if(data.password !== data.confirmPassword) {
-      setError('confirmPassword', {
-        type: 'manual',
-        message: 'Passwords do not match'
-      })
-      return
+  const onSubmit: SubmitHandler<SignUpStateType> = async (data) => {
+    try {
+      if(data.password !== data.confirmPassword) {
+        setError('confirmPassword', {
+          type: 'manual',
+          message: 'Passwords do not match'
+        })
+        return
+      }
+
+      const response = await axiosFetch.post('/auth/signup', data);
+
+      // might want him to login automatically after signing up
+      navigate({ to: '/login'})
+    } catch (e: any) {
+      if (e.response?.status === 400) {
+        setError(e.response.data.name, {
+          type: 'manual',
+          message: e.response.data.message,
+        });
+      }
     }
-
-    // handle username and email unique errrs after fetching
   }
 
   return (
@@ -109,6 +123,9 @@ function RouteComponent() {
                 </div>
                 {errors.confirmPassword && <span className='text-red-500 font-medium text-sm'>{errors.confirmPassword.message}</span>}
               </div>
+              <p className='text-sm font-medium '>Already have an Account?  {" "}
+                <Link className='text-blue-500 underline-offset-4  hover:text-blue-700 hover:underline' to='/login'>Login</Link>
+              </p>
             </div>
 
           </CardContent>
