@@ -1,3 +1,4 @@
+import LoadingSpinner from '@/components/common/LoadingSpinner'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from "@/components/ui/input"
@@ -21,12 +22,14 @@ type SignUpStateType = {
 
 function RouteComponent() {
   const [showPassword, setShowPassword] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const { register, handleSubmit, setError, formState: { errors } } = useForm<SignUpStateType>();
   const navigate = useNavigate({ from: '/signup' })
 
   const onSubmit: SubmitHandler<SignUpStateType> = async (data) => {
     try {
+      setIsLoading(true)
       if(data.password !== data.confirmPassword) {
         setError('confirmPassword', {
           type: 'manual',
@@ -46,6 +49,8 @@ function RouteComponent() {
           message: e.response.data.message,
         });
       }
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -131,8 +136,8 @@ function RouteComponent() {
           </CardContent>
 
           <CardFooter>
-            <Button>
-              Sign Up
+            <Button type="submit" className='w-full' disabled={isLoading}>
+              {isLoading ? <LoadingSpinner /> :"Sign Up"}
             </Button>
           </CardFooter>
 

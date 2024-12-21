@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Request, Response, UseGuards } from '@nestjs/common';
 import { RefreshTokenDto, SignUpDto } from './dto/auth.dto';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -6,6 +6,17 @@ import { AuthGuard } from '@nestjs/passport';
 @Controller('auth')
 export class AuthController {
     constructor(private readonly authService: AuthService) {}
+
+    @Get('google-login')
+    @UseGuards(AuthGuard('google'))
+    async googleAuth(@Request() req: any) {}
+
+    @Get('google-redirect')
+    @UseGuards(AuthGuard('google'))
+    async googleAuthRedirect(@Request() req: any, @Response() res: any) {
+        const tokens = await this.authService.validateGoogle(req.user);
+        return res.redirect(`${process.env.CLIENT_BASE_URL}/redirecttoken?access_token=${tokens.access_token}&refresh_token=${tokens.refresh_token}`);
+    }
 
     @UseGuards(AuthGuard('local'))
     @Post('login')

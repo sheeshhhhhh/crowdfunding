@@ -13,6 +13,7 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
 import { Route as SignupIndexImport } from './routes/signup/index'
+import { Route as RedirecttokenIndexImport } from './routes/redirecttoken/index'
 import { Route as LoginIndexImport } from './routes/login/index'
 
 // Create/Update Routes
@@ -26,6 +27,12 @@ const IndexRoute = IndexImport.update({
 const SignupIndexRoute = SignupIndexImport.update({
   id: '/signup/',
   path: '/signup/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const RedirecttokenIndexRoute = RedirecttokenIndexImport.update({
+  id: '/redirecttoken/',
+  path: '/redirecttoken/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -53,6 +60,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginIndexImport
       parentRoute: typeof rootRoute
     }
+    '/redirecttoken/': {
+      id: '/redirecttoken/'
+      path: '/redirecttoken'
+      fullPath: '/redirecttoken'
+      preLoaderRoute: typeof RedirecttokenIndexImport
+      parentRoute: typeof rootRoute
+    }
     '/signup/': {
       id: '/signup/'
       path: '/signup'
@@ -68,12 +82,14 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginIndexRoute
+  '/redirecttoken': typeof RedirecttokenIndexRoute
   '/signup': typeof SignupIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginIndexRoute
+  '/redirecttoken': typeof RedirecttokenIndexRoute
   '/signup': typeof SignupIndexRoute
 }
 
@@ -81,27 +97,30 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/login/': typeof LoginIndexRoute
+  '/redirecttoken/': typeof RedirecttokenIndexRoute
   '/signup/': typeof SignupIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/signup'
+  fullPaths: '/' | '/login' | '/redirecttoken' | '/signup'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/signup'
-  id: '__root__' | '/' | '/login/' | '/signup/'
+  to: '/' | '/login' | '/redirecttoken' | '/signup'
+  id: '__root__' | '/' | '/login/' | '/redirecttoken/' | '/signup/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LoginIndexRoute: typeof LoginIndexRoute
+  RedirecttokenIndexRoute: typeof RedirecttokenIndexRoute
   SignupIndexRoute: typeof SignupIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LoginIndexRoute: LoginIndexRoute,
+  RedirecttokenIndexRoute: RedirecttokenIndexRoute,
   SignupIndexRoute: SignupIndexRoute,
 }
 
@@ -117,6 +136,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/login/",
+        "/redirecttoken/",
         "/signup/"
       ]
     },
@@ -125,6 +145,9 @@ export const routeTree = rootRoute
     },
     "/login/": {
       "filePath": "login/index.tsx"
+    },
+    "/redirecttoken/": {
+      "filePath": "redirecttoken/index.tsx"
     },
     "/signup/": {
       "filePath": "signup/index.tsx"

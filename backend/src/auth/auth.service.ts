@@ -13,6 +13,28 @@ export class AuthService {
         private readonly jwtService: JwtService
     ) {}
 
+    async validateGoogle(user: any) {
+        const getUser = await this.prisma.user.findFirst({
+            where: {
+                email: user?.emails[0]?.value
+            }
+        }) 
+
+        if(!getUser) {
+            const createUser = await this.prisma.user.create({
+                data: {
+                    username: user.displayName,
+                    email: user.emails[0].value,
+                    profile: user.photos[0].value
+                }
+            })
+             
+            return this.login(createUser)
+        }
+
+        return this.login(getUser)
+    }
+
     async validateUser({ username, password }: LoginDto) {
         const user = await this.prisma.user.findUnique({
             where: {

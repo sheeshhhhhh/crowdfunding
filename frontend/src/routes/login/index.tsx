@@ -8,6 +8,7 @@ import { Eye, EyeOff } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import axiosFetch from '@/lib/axios'
 import LoadingSpinner from '@/components/common/LoadingSpinner'
+import googleIcon from '../../../public/google.svg'
 
 export const Route = createFileRoute('/login/')({
   component: RouteComponent,
@@ -82,9 +83,17 @@ function RouteComponent() {
               </div>
           </CardContent>
 
-          <CardFooter>
+          <CardFooter className='flex-col'>
             <Button type="submit" className='w-full' disabled={isLoading}>
               {isLoading ? <LoadingSpinner /> : "Login"}
+            </Button>
+            <div className='w-full'>
+              <div className="py-3 flex items-center text-sm text-gray-800 before:flex-1 before:border-t-2 before:border-gray-200 before:me-6 after:flex-1 after:border-t-2 after:border-gray-200 after:ms-6 dark:text-white dark:before:border-neutral-600 dark:after:border-neutral-600">
+                or
+              </div>
+            </div>
+            <Button type='button' className='w-full' variant='secondary' onClick={() => window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/google-login`}>
+              <img src={googleIcon} className='w-5 h-5' /> Google
             </Button>
           </CardFooter>
 
