@@ -5,6 +5,7 @@ import { LocalStrategy } from 'src/passport/local.passport';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { GoogleStrategy } from 'src/passport/google.passport';
+import { FacebookStrategy } from 'src/passport/facebook.passport';
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import { GoogleStrategy } from 'src/passport/google.passport';
   providers: [
     AuthService, 
     LocalStrategy,
-    GoogleStrategy
+    GoogleStrategy,
+    FacebookStrategy
   ],
   controllers: [AuthController]
 })

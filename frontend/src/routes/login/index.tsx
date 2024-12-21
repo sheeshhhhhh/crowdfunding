@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button'
 import axiosFetch from '@/lib/axios'
 import LoadingSpinner from '@/components/common/LoadingSpinner'
 import googleIcon from '../../../public/google.svg'
+import facebookIcon from '../../../public/facebook.svg'
 
 export const Route = createFileRoute('/login/')({
   component: RouteComponent,
@@ -92,8 +93,11 @@ function RouteComponent() {
                 or
               </div>
             </div>
-            <Button type='button' className='w-full' variant='secondary' onClick={() => window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/google-login`}>
+            <Button type='button' className='w-full justify-start pl-40' variant='secondary' onClick={() => window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/google-login`}>
               <img src={googleIcon} className='w-5 h-5' /> Google
+            </Button>
+            <Button type='button' className='w-full justify-start pl-40 mt-3' variant='secondary' onClick={() => window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/facebook-login`}>
+              <img src={facebookIcon} className='w-5 h-5' /> Facebook
             </Button>
           </CardFooter>
 

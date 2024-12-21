@@ -5,6 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { uuid } from 'uuidv4';
 import { Prisma } from '@prisma/client';
+import { Profile } from 'passport-facebook';
 
 @Injectable()
 export class AuthService {
@@ -12,6 +13,30 @@ export class AuthService {
         private readonly prisma: PrismaService,
         private readonly jwtService: JwtService
     ) {}
+
+    async validateFacebook(user: Profile) {
+        const getUser = await this.prisma.user.findFirst({
+            where: {
+                email: user.emails[0].value
+            }
+        }) 
+
+        if(!getUser) {
+            const username = user.displayName || (user.name.givenName + user.name.familyName)
+
+            const createUser = await this.prisma.user.create({
+                data: {
+                    username: username,
+                    email: user.emails[0].value,
+                    profile: user.photos[0].value
+                }
+            })
+             
+            return this.login(createUser)
+        }
+
+        return this.login(getUser)
+    }
 
     async validateGoogle(user: any) {
         const getUser = await this.prisma.user.findFirst({

@@ -7,6 +7,17 @@ import { AuthGuard } from '@nestjs/passport';
 export class AuthController {
     constructor(private readonly authService: AuthService) {}
 
+    @Get('facebook-login')
+    @UseGuards(AuthGuard('facebook'))
+    async facebookAuth(@Request() req: any) {}
+
+    @Get('facebook-redirect')
+    @UseGuards(AuthGuard('facebook'))
+    async facebookAuthRedirect(@Request() req: any, @Response() res: any) {
+        const tokens = await this.authService.validateFacebook(req.user);
+        return res.redirect(`${process.env.CLIENT_BASE_URL}/redirecttoken?access_token=${tokens.access_token}&refresh_token=${tokens.refresh_token}`);
+    }
+
     @Get('google-login')
     @UseGuards(AuthGuard('google'))
     async googleAuth(@Request() req: any) {}
