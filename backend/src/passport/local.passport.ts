@@ -1,5 +1,5 @@
 import { BadRequestException, GoneException, Injectable } from "@nestjs/common";
-import { PassportStrategy } from "@nestjs/passport";
+import { AuthGuard, PassportStrategy } from "@nestjs/passport";
 import { Strategy } from "passport-local";
 import { AuthService } from "src/auth/auth.service";
 
@@ -22,3 +22,5 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
         return user.user
     }
 }
+
+export class LocalAuthGuard extends AuthGuard('local') {}

@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { PassportStrategy } from "@nestjs/passport";
+import { AuthGuard, PassportStrategy } from "@nestjs/passport";
 import { Strategy, Profile } from "passport-facebook";
 
 @Injectable()
@@ -18,3 +18,5 @@ export class FacebookStrategy extends PassportStrategy(Strategy) {
         done(null, profile)
     }
 }
+
+export class FacebookAuthGuard extends AuthGuard('facebook') {}

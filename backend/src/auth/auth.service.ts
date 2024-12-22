@@ -1,4 +1,4 @@
-import { BadRequestException, GoneException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, GoneException, Injectable, InternalServerErrorException, UseFilters } from '@nestjs/common';
 import { LoginDto, SignUpDto } from './dto/auth.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
@@ -13,6 +13,25 @@ export class AuthService {
         private readonly prisma: PrismaService,
         private readonly jwtService: JwtService
     ) {}
+
+    async checkUser(req: any) {
+        const userId = req?.user?.id;
+        
+        const user = await this.prisma.user.findUnique({
+            where: {
+                id: userId
+            },
+            select: {
+                id: true,
+                username: true,
+                email: true,
+                profile: true,
+                createdAt: true
+            }
+        })
+
+        return user;
+    }
 
     async validateFacebook(user: Profile) {
         const getUser = await this.prisma.user.findFirst({
