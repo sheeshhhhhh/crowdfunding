@@ -15,6 +15,12 @@ import { Route as IndexImport } from './routes/index'
 import { Route as SignupIndexImport } from './routes/signup/index'
 import { Route as RedirecttokenIndexImport } from './routes/redirecttoken/index'
 import { Route as LoginIndexImport } from './routes/login/index'
+import { Route as DashboardIndexImport } from './routes/dashboard/index'
+import { Route as DashboardOverviewImport } from './routes/dashboard/Overview'
+import { Route as DashboardInboxImport } from './routes/dashboard/Inbox'
+import { Route as DashboardDonationsImport } from './routes/dashboard/Donations'
+import { Route as DashboardCampaignsImport } from './routes/dashboard/Campaigns'
+import { Route as CampaignsCreateImport } from './routes/campaigns/create'
 
 // Create/Update Routes
 
@@ -42,6 +48,42 @@ const LoginIndexRoute = LoginIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const DashboardIndexRoute = DashboardIndexImport.update({
+  id: '/dashboard/',
+  path: '/dashboard/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const DashboardOverviewRoute = DashboardOverviewImport.update({
+  id: '/dashboard/Overview',
+  path: '/dashboard/Overview',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const DashboardInboxRoute = DashboardInboxImport.update({
+  id: '/dashboard/Inbox',
+  path: '/dashboard/Inbox',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const DashboardDonationsRoute = DashboardDonationsImport.update({
+  id: '/dashboard/Donations',
+  path: '/dashboard/Donations',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const DashboardCampaignsRoute = DashboardCampaignsImport.update({
+  id: '/dashboard/Campaigns',
+  path: '/dashboard/Campaigns',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const CampaignsCreateRoute = CampaignsCreateImport.update({
+  id: '/campaigns/create',
+  path: '/campaigns/create',
+  getParentRoute: () => rootRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -51,6 +93,48 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/campaigns/create': {
+      id: '/campaigns/create'
+      path: '/campaigns/create'
+      fullPath: '/campaigns/create'
+      preLoaderRoute: typeof CampaignsCreateImport
+      parentRoute: typeof rootRoute
+    }
+    '/dashboard/Campaigns': {
+      id: '/dashboard/Campaigns'
+      path: '/dashboard/Campaigns'
+      fullPath: '/dashboard/Campaigns'
+      preLoaderRoute: typeof DashboardCampaignsImport
+      parentRoute: typeof rootRoute
+    }
+    '/dashboard/Donations': {
+      id: '/dashboard/Donations'
+      path: '/dashboard/Donations'
+      fullPath: '/dashboard/Donations'
+      preLoaderRoute: typeof DashboardDonationsImport
+      parentRoute: typeof rootRoute
+    }
+    '/dashboard/Inbox': {
+      id: '/dashboard/Inbox'
+      path: '/dashboard/Inbox'
+      fullPath: '/dashboard/Inbox'
+      preLoaderRoute: typeof DashboardInboxImport
+      parentRoute: typeof rootRoute
+    }
+    '/dashboard/Overview': {
+      id: '/dashboard/Overview'
+      path: '/dashboard/Overview'
+      fullPath: '/dashboard/Overview'
+      preLoaderRoute: typeof DashboardOverviewImport
+      parentRoute: typeof rootRoute
+    }
+    '/dashboard/': {
+      id: '/dashboard/'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardIndexImport
       parentRoute: typeof rootRoute
     }
     '/login/': {
@@ -81,6 +165,12 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/campaigns/create': typeof CampaignsCreateRoute
+  '/dashboard/Campaigns': typeof DashboardCampaignsRoute
+  '/dashboard/Donations': typeof DashboardDonationsRoute
+  '/dashboard/Inbox': typeof DashboardInboxRoute
+  '/dashboard/Overview': typeof DashboardOverviewRoute
+  '/dashboard': typeof DashboardIndexRoute
   '/login': typeof LoginIndexRoute
   '/redirecttoken': typeof RedirecttokenIndexRoute
   '/signup': typeof SignupIndexRoute
@@ -88,6 +178,12 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/campaigns/create': typeof CampaignsCreateRoute
+  '/dashboard/Campaigns': typeof DashboardCampaignsRoute
+  '/dashboard/Donations': typeof DashboardDonationsRoute
+  '/dashboard/Inbox': typeof DashboardInboxRoute
+  '/dashboard/Overview': typeof DashboardOverviewRoute
+  '/dashboard': typeof DashboardIndexRoute
   '/login': typeof LoginIndexRoute
   '/redirecttoken': typeof RedirecttokenIndexRoute
   '/signup': typeof SignupIndexRoute
@@ -96,6 +192,12 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/campaigns/create': typeof CampaignsCreateRoute
+  '/dashboard/Campaigns': typeof DashboardCampaignsRoute
+  '/dashboard/Donations': typeof DashboardDonationsRoute
+  '/dashboard/Inbox': typeof DashboardInboxRoute
+  '/dashboard/Overview': typeof DashboardOverviewRoute
+  '/dashboard/': typeof DashboardIndexRoute
   '/login/': typeof LoginIndexRoute
   '/redirecttoken/': typeof RedirecttokenIndexRoute
   '/signup/': typeof SignupIndexRoute
@@ -103,15 +205,52 @@ export interface FileRoutesById {
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/redirecttoken' | '/signup'
+  fullPaths:
+    | '/'
+    | '/campaigns/create'
+    | '/dashboard/Campaigns'
+    | '/dashboard/Donations'
+    | '/dashboard/Inbox'
+    | '/dashboard/Overview'
+    | '/dashboard'
+    | '/login'
+    | '/redirecttoken'
+    | '/signup'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/redirecttoken' | '/signup'
-  id: '__root__' | '/' | '/login/' | '/redirecttoken/' | '/signup/'
+  to:
+    | '/'
+    | '/campaigns/create'
+    | '/dashboard/Campaigns'
+    | '/dashboard/Donations'
+    | '/dashboard/Inbox'
+    | '/dashboard/Overview'
+    | '/dashboard'
+    | '/login'
+    | '/redirecttoken'
+    | '/signup'
+  id:
+    | '__root__'
+    | '/'
+    | '/campaigns/create'
+    | '/dashboard/Campaigns'
+    | '/dashboard/Donations'
+    | '/dashboard/Inbox'
+    | '/dashboard/Overview'
+    | '/dashboard/'
+    | '/login/'
+    | '/redirecttoken/'
+    | '/signup/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CampaignsCreateRoute: typeof CampaignsCreateRoute
+  DashboardCampaignsRoute: typeof DashboardCampaignsRoute
+  DashboardDonationsRoute: typeof DashboardDonationsRoute
+  DashboardInboxRoute: typeof DashboardInboxRoute
+  DashboardOverviewRoute: typeof DashboardOverviewRoute
+  DashboardIndexRoute: typeof DashboardIndexRoute
   LoginIndexRoute: typeof LoginIndexRoute
   RedirecttokenIndexRoute: typeof RedirecttokenIndexRoute
   SignupIndexRoute: typeof SignupIndexRoute
@@ -119,6 +258,12 @@ export interface RootRouteChildren {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CampaignsCreateRoute: CampaignsCreateRoute,
+  DashboardCampaignsRoute: DashboardCampaignsRoute,
+  DashboardDonationsRoute: DashboardDonationsRoute,
+  DashboardInboxRoute: DashboardInboxRoute,
+  DashboardOverviewRoute: DashboardOverviewRoute,
+  DashboardIndexRoute: DashboardIndexRoute,
   LoginIndexRoute: LoginIndexRoute,
   RedirecttokenIndexRoute: RedirecttokenIndexRoute,
   SignupIndexRoute: SignupIndexRoute,
@@ -135,6 +280,12 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/campaigns/create",
+        "/dashboard/Campaigns",
+        "/dashboard/Donations",
+        "/dashboard/Inbox",
+        "/dashboard/Overview",
+        "/dashboard/",
         "/login/",
         "/redirecttoken/",
         "/signup/"
@@ -142,6 +293,24 @@ export const routeTree = rootRoute
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/campaigns/create": {
+      "filePath": "campaigns/create.tsx"
+    },
+    "/dashboard/Campaigns": {
+      "filePath": "dashboard/Campaigns.tsx"
+    },
+    "/dashboard/Donations": {
+      "filePath": "dashboard/Donations.tsx"
+    },
+    "/dashboard/Inbox": {
+      "filePath": "dashboard/Inbox.tsx"
+    },
+    "/dashboard/Overview": {
+      "filePath": "dashboard/Overview.tsx"
+    },
+    "/dashboard/": {
+      "filePath": "dashboard/index.tsx"
     },
     "/login/": {
       "filePath": "login/index.tsx"

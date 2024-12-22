@@ -21,6 +21,7 @@ model User {
   password  String?
 
   crodfundPosts CrowdFundPost[]
+  donations    Donation[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -34,20 +35,54 @@ model refreshToken {
   expiresAt DateTime
 }
 
+enum CrowdFundPostStatus {
+  ACTIVE
+  SUCCESS
+  FAILED
+}
+
 model CrowdFundPost {
   id          String   @id @default(cuid())
   userId      String
-  HeaderImage String
+  headerImage String
   title       String
+  status      CrowdFundPostStatus @default(ACTIVE)
 
   // add a rich text editor
-  description String
   body        String
 
   goal        Int // money goal
   current     Int // current money
-  
+  totalDonors Int // total donators
+
+  donations   Donation[]
+
   user        User     @relation(fields: [userId], references: [id])
+
+  // add per month report?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  endDate     DateTime?
+}
+
+model Donation { 
+  id          String   @id @default(cuid())
+  userId      String?
+  postId      String
+  amount      Int      // base on dollars
+
+  message     String?
+
+  user        User?     @relation(fields: [userId], references: [id])
+  post        CrowdFundPost @relation(fields: [postId], references: [id])
+
+  // payment info
+  // paymentId   String
+  // paymentType String
+  // paymentStatus String
+  // paymentDate DateTime
+  // payerName String
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
