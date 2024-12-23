@@ -33,6 +33,7 @@ const AuthContextProvider = ({ children }: any) => {
 
             return response.data;
         },
+        refetchOnWindowFocus: false
     })
 
     const isLoggedIn = () => {

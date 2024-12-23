@@ -21,6 +21,7 @@ import { Route as DashboardInboxImport } from './routes/dashboard/Inbox'
 import { Route as DashboardDonationsImport } from './routes/dashboard/Donations'
 import { Route as DashboardCampaignsImport } from './routes/dashboard/Campaigns'
 import { Route as CampaignsCreateImport } from './routes/campaigns/create'
+import { Route as CampaignsUpdateCampaignIdImport } from './routes/campaigns/update/$campaignId'
 
 // Create/Update Routes
 
@@ -81,6 +82,12 @@ const DashboardCampaignsRoute = DashboardCampaignsImport.update({
 const CampaignsCreateRoute = CampaignsCreateImport.update({
   id: '/campaigns/create',
   path: '/campaigns/create',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const CampaignsUpdateCampaignIdRoute = CampaignsUpdateCampaignIdImport.update({
+  id: '/campaigns/update/$campaignId',
+  path: '/campaigns/update/$campaignId',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -158,6 +165,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignupIndexImport
       parentRoute: typeof rootRoute
     }
+    '/campaigns/update/$campaignId': {
+      id: '/campaigns/update/$campaignId'
+      path: '/campaigns/update/$campaignId'
+      fullPath: '/campaigns/update/$campaignId'
+      preLoaderRoute: typeof CampaignsUpdateCampaignIdImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -174,6 +188,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginIndexRoute
   '/redirecttoken': typeof RedirecttokenIndexRoute
   '/signup': typeof SignupIndexRoute
+  '/campaigns/update/$campaignId': typeof CampaignsUpdateCampaignIdRoute
 }
 
 export interface FileRoutesByTo {
@@ -187,6 +202,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginIndexRoute
   '/redirecttoken': typeof RedirecttokenIndexRoute
   '/signup': typeof SignupIndexRoute
+  '/campaigns/update/$campaignId': typeof CampaignsUpdateCampaignIdRoute
 }
 
 export interface FileRoutesById {
@@ -201,6 +217,7 @@ export interface FileRoutesById {
   '/login/': typeof LoginIndexRoute
   '/redirecttoken/': typeof RedirecttokenIndexRoute
   '/signup/': typeof SignupIndexRoute
+  '/campaigns/update/$campaignId': typeof CampaignsUpdateCampaignIdRoute
 }
 
 export interface FileRouteTypes {
@@ -216,6 +233,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/redirecttoken'
     | '/signup'
+    | '/campaigns/update/$campaignId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -228,6 +246,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/redirecttoken'
     | '/signup'
+    | '/campaigns/update/$campaignId'
   id:
     | '__root__'
     | '/'
@@ -240,6 +259,7 @@ export interface FileRouteTypes {
     | '/login/'
     | '/redirecttoken/'
     | '/signup/'
+    | '/campaigns/update/$campaignId'
   fileRoutesById: FileRoutesById
 }
 
@@ -254,6 +274,7 @@ export interface RootRouteChildren {
   LoginIndexRoute: typeof LoginIndexRoute
   RedirecttokenIndexRoute: typeof RedirecttokenIndexRoute
   SignupIndexRoute: typeof SignupIndexRoute
+  CampaignsUpdateCampaignIdRoute: typeof CampaignsUpdateCampaignIdRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -267,6 +288,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginIndexRoute: LoginIndexRoute,
   RedirecttokenIndexRoute: RedirecttokenIndexRoute,
   SignupIndexRoute: SignupIndexRoute,
+  CampaignsUpdateCampaignIdRoute: CampaignsUpdateCampaignIdRoute,
 }
 
 export const routeTree = rootRoute
@@ -288,7 +310,8 @@ export const routeTree = rootRoute
         "/dashboard/",
         "/login/",
         "/redirecttoken/",
-        "/signup/"
+        "/signup/",
+        "/campaigns/update/$campaignId"
       ]
     },
     "/": {
@@ -320,6 +343,9 @@ export const routeTree = rootRoute
     },
     "/signup/": {
       "filePath": "signup/index.tsx"
+    },
+    "/campaigns/update/$campaignId": {
+      "filePath": "campaigns/update/$campaignId.tsx"
     }
   }
 }

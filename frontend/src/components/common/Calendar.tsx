@@ -1,19 +1,25 @@
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { Button } from '../ui/button';
-import { useState } from 'react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { CalendarIcon } from 'lucide-react';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar'
+import { ComponentProps } from 'react';
 
 type CalendarProps = {
-    className?: string
-}
+    className?: string,
+    date: Date | undefined,
+    onSelect: (date: Date | undefined) => void,
+    selected: Date | undefined
+} & Partial<ComponentProps<typeof CalendarComponent>>
 
 const Calendar = ({
-    className
+    className,
+    date,
+    onSelect,
+    selected,
+    ...props
 }: CalendarProps) => {
-    const [date, setDate] = useState<Date | undefined>(undefined) 
 
     return (
         <div>
@@ -32,9 +38,10 @@ const Calendar = ({
                 </PopoverTrigger>
                 <PopoverContent>
                     <CalendarComponent 
+                    {...props}
+                    selected={selected}
+                    onSelect={onSelect}
                     mode='single'
-                    selected={date}
-                    onSelect={setDate}
                     disabled={{ before: new Date() }}
                     />
                 </PopoverContent>

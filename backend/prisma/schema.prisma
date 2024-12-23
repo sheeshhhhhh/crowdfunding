@@ -20,7 +20,7 @@ model User {
   profile   String?
   password  String?
 
-  crodfundPosts CrowdFundPost[]
+  crodfundPosts CampaignPost[]
   donations    Donation[]
 
   createdAt DateTime @default(now())
@@ -35,20 +35,20 @@ model refreshToken {
   expiresAt DateTime
 }
 
-enum CrowdFundPostStatus {
+enum CampaignStatus {
   ACTIVE
   SUCCESS
   FAILED
 }
 
-model CrowdFundPost {
+// campaign
+model CampaignPost {
   id          String   @id @default(cuid())
   userId      String
   headerImage String
   title       String
-  status      CrowdFundPostStatus @default(ACTIVE)
+  status      CampaignStatus @default(ACTIVE)
 
-  // add a rich text editor
   body        String
 
   goal        Int // money goal
@@ -64,6 +64,8 @@ model CrowdFundPost {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   endDate     DateTime?
+
+  @@unique([userId, title])
 }
 
 model Donation { 
@@ -75,7 +77,7 @@ model Donation {
   message     String?
 
   user        User?     @relation(fields: [userId], references: [id])
-  post        CrowdFundPost @relation(fields: [postId], references: [id])
+  post        CampaignPost @relation(fields: [postId], references: [id])
 
   // payment info
   // paymentId   String
