@@ -30,9 +30,9 @@ export class CampaignController {
 
     @IsPublic()
     @Get('browse-campaigns')
-    async browseCampaigns(@Query() searchQuery: string) {
+    async browseCampaigns(@Query() searchQuery: { search: string, page: number, filter: string }) {
         // add search later on
-        return this.campaignService.BrowseCampaigns();
+        return this.campaignService.BrowseCampaigns(searchQuery);
     }
 
     @IsPublic()

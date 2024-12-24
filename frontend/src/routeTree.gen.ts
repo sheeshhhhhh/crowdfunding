@@ -21,6 +21,8 @@ import { Route as DashboardInboxImport } from './routes/dashboard/Inbox'
 import { Route as DashboardDonationsImport } from './routes/dashboard/Donations'
 import { Route as DashboardCampaignsImport } from './routes/dashboard/Campaigns'
 import { Route as CampaignsCreateImport } from './routes/campaigns/create'
+import { Route as CampaignsBrowseImport } from './routes/campaigns/browse'
+import { Route as CampaignsCampaignIdImport } from './routes/campaigns/$campaignId'
 import { Route as CampaignsUpdateCampaignIdImport } from './routes/campaigns/update/$campaignId'
 
 // Create/Update Routes
@@ -85,6 +87,18 @@ const CampaignsCreateRoute = CampaignsCreateImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const CampaignsBrowseRoute = CampaignsBrowseImport.update({
+  id: '/campaigns/browse',
+  path: '/campaigns/browse',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const CampaignsCampaignIdRoute = CampaignsCampaignIdImport.update({
+  id: '/campaigns/$campaignId',
+  path: '/campaigns/$campaignId',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const CampaignsUpdateCampaignIdRoute = CampaignsUpdateCampaignIdImport.update({
   id: '/campaigns/update/$campaignId',
   path: '/campaigns/update/$campaignId',
@@ -100,6 +114,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/campaigns/$campaignId': {
+      id: '/campaigns/$campaignId'
+      path: '/campaigns/$campaignId'
+      fullPath: '/campaigns/$campaignId'
+      preLoaderRoute: typeof CampaignsCampaignIdImport
+      parentRoute: typeof rootRoute
+    }
+    '/campaigns/browse': {
+      id: '/campaigns/browse'
+      path: '/campaigns/browse'
+      fullPath: '/campaigns/browse'
+      preLoaderRoute: typeof CampaignsBrowseImport
       parentRoute: typeof rootRoute
     }
     '/campaigns/create': {
@@ -179,6 +207,8 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/campaigns/$campaignId': typeof CampaignsCampaignIdRoute
+  '/campaigns/browse': typeof CampaignsBrowseRoute
   '/campaigns/create': typeof CampaignsCreateRoute
   '/dashboard/Campaigns': typeof DashboardCampaignsRoute
   '/dashboard/Donations': typeof DashboardDonationsRoute
@@ -193,6 +223,8 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/campaigns/$campaignId': typeof CampaignsCampaignIdRoute
+  '/campaigns/browse': typeof CampaignsBrowseRoute
   '/campaigns/create': typeof CampaignsCreateRoute
   '/dashboard/Campaigns': typeof DashboardCampaignsRoute
   '/dashboard/Donations': typeof DashboardDonationsRoute
@@ -208,6 +240,8 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/campaigns/$campaignId': typeof CampaignsCampaignIdRoute
+  '/campaigns/browse': typeof CampaignsBrowseRoute
   '/campaigns/create': typeof CampaignsCreateRoute
   '/dashboard/Campaigns': typeof DashboardCampaignsRoute
   '/dashboard/Donations': typeof DashboardDonationsRoute
@@ -224,6 +258,8 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/campaigns/$campaignId'
+    | '/campaigns/browse'
     | '/campaigns/create'
     | '/dashboard/Campaigns'
     | '/dashboard/Donations'
@@ -237,6 +273,8 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/campaigns/$campaignId'
+    | '/campaigns/browse'
     | '/campaigns/create'
     | '/dashboard/Campaigns'
     | '/dashboard/Donations'
@@ -250,6 +288,8 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/campaigns/$campaignId'
+    | '/campaigns/browse'
     | '/campaigns/create'
     | '/dashboard/Campaigns'
     | '/dashboard/Donations'
@@ -265,6 +305,8 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CampaignsCampaignIdRoute: typeof CampaignsCampaignIdRoute
+  CampaignsBrowseRoute: typeof CampaignsBrowseRoute
   CampaignsCreateRoute: typeof CampaignsCreateRoute
   DashboardCampaignsRoute: typeof DashboardCampaignsRoute
   DashboardDonationsRoute: typeof DashboardDonationsRoute
@@ -279,6 +321,8 @@ export interface RootRouteChildren {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CampaignsCampaignIdRoute: CampaignsCampaignIdRoute,
+  CampaignsBrowseRoute: CampaignsBrowseRoute,
   CampaignsCreateRoute: CampaignsCreateRoute,
   DashboardCampaignsRoute: DashboardCampaignsRoute,
   DashboardDonationsRoute: DashboardDonationsRoute,
@@ -302,6 +346,8 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/campaigns/$campaignId",
+        "/campaigns/browse",
         "/campaigns/create",
         "/dashboard/Campaigns",
         "/dashboard/Donations",
@@ -316,6 +362,12 @@ export const routeTree = rootRoute
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/campaigns/$campaignId": {
+      "filePath": "campaigns/$campaignId.tsx"
+    },
+    "/campaigns/browse": {
+      "filePath": "campaigns/browse.tsx"
     },
     "/campaigns/create": {
       "filePath": "campaigns/create.tsx"

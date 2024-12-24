@@ -67,7 +67,7 @@ function Index() {
             <div className="hidden sm:ml-6 sm:flex sm:items-center">
               {isLoggedIn() ? (
                 <div className='space-x-4'>
-                  <Link href="/dashboard">
+                  <Link href="/dashboard/overview">
                     <Button>Dashboard</Button>
                   </Link>
                   <Link href="/logout">
@@ -104,12 +104,12 @@ function Index() {
                   </p>
                   <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
                     <div className="rounded-md shadow">
-                      <Link href="/browse">
+                      <Link to="/campaigns/browse" search={{ page: 1, search: '', filter: '' }} >
                         <Button size="lg" className="w-full">Browse Campaigns</Button>
                       </Link>
                     </div>
                     <div className="mt-3 sm:mt-0 sm:ml-3">
-                      <Link href={isLoggedIn() ? "/dashboard" : "/signup"}>
+                      <Link href={isLoggedIn() ? "/dashboard/overview" : "/login"}>
                         <Button variant="outline" size="lg" className="w-full">
                           {isLoggedIn() ? "Go to Dashboard" : "Start Fundraising"}
                         </Button>

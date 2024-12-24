@@ -25,8 +25,8 @@ const Campaigns = ({
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {campaignData.map((campaign, index) => (
                 <Card key={index}>
-                    <CardHeader>
-                    <CardTitle>{campaign.title}</CardTitle>
+                    <CardHeader className="h-[95.97px]">
+                        <CardTitle >{campaign.title}</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="space-y-2">
@@ -41,7 +41,7 @@ const Campaigns = ({
                         </div>
                     </CardContent>
                     <CardFooter className="justify-end space-x-3">
-                        <Link to={'/campaigns/update/' + campaign.id}>
+                        <Link reloadDocument={true} to={'/campaigns/update/' + campaign.id}>
                             <Button>
                                 Edit
                             </Button>

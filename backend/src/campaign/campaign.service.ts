@@ -56,9 +56,26 @@ export class CampaignService {
         return campaigns;
     }
 
-    async BrowseCampaigns() {
+    async BrowseCampaigns(searchQuery: { 
+        search: string, page: number, filter: string 
+    }) {
         // implement search and pagination later on
-        const campaigns = await this.prisma.campaignPost.findMany();
+        const campaigns = await this.prisma.campaignPost.findMany({
+            where: {
+                title: {
+                    contains: searchQuery.search,
+                    mode: 'insensitive'
+                }
+            },
+            include: {
+                user: {
+                    select: {
+                        username: true,
+                        id: true
+                    }
+                }
+            }
+        });
 
         return campaigns;
     }
@@ -67,6 +84,15 @@ export class CampaignService {
         const campaigns = await this.prisma.campaignPost.findFirst({
             where: {
                 id: campaignId
+            },
+            include: {
+                user: {
+                    select: {
+                        profile: true,
+                        username: true,
+                        id: true
+                    }
+                }
             }
         });
 

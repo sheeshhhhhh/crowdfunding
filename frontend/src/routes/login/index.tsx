@@ -34,7 +34,7 @@ function RouteComponent() {
       localStorage.setItem('access_token', response.data.access_token);
       localStorage.setItem('refresh_token', response.data.refresh_token);
       
-      navigate({ to: '/'})
+      navigate({ to: '/', reloadDocument: true })
     } catch (e: any) {
       if (e.response?.status === 400) {
         setError(e.response.data.name, {

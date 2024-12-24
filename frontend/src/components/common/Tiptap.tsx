@@ -1,8 +1,8 @@
-import { useEditor, EditorContent, Editor } from '@tiptap/react'
-import { Bold, Strikethrough, Italic, List, ListOrdered, Heading1, Heading2, Heading3 } from 'lucide-react'
-import StarterKit from '@tiptap/starter-kit'
 import { Toggle } from '@/components/ui/toggle';
 import Heading from '@tiptap/extension-heading';
+import { Editor, EditorContent, useEditor } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import { Bold, Heading1, Heading2, Heading3, Italic, List, ListOrdered, Strikethrough } from 'lucide-react';
 
 type TiptapProps = {
     body?: string,
@@ -16,7 +16,14 @@ const Tiptap = ({
 }: TiptapProps) => {
     const editor = useEditor({
         extensions: [
-            StarterKit.configure(),
+            StarterKit.configure({
+                // https://stackoverflow.com/questions/71439281/change-enter-to-break-line-instead-of-new-paragraph-in-tiptap
+                paragraph: {
+                    HTMLAttributes: {
+                      class: 'min-h-[1rem]'
+                    }
+                }
+            }),
             Heading.configure({
                 HTMLAttributes: {
                     class: '',
