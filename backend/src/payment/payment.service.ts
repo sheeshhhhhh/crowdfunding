@@ -2,6 +2,7 @@ import { BadRequestException, GoneException, Injectable, InternalServerErrorExce
 import { CampaignPost } from '@prisma/client';
 import axios from 'axios'
 
+
 @Injectable()
 export class PaymentService {
 
@@ -28,29 +29,27 @@ export class PaymentService {
             const response = await axios.post(`${process.env.PAYMONGO_API_URL}/payment_intents`, 
                 JSON.stringify({
                     data: {
-                        data: {
-                            attributes: {
-                                amount: parseInt(amount.toString() + "00"),
-                                payment_method_allowed: [
-                                    "card",
-                                    "paymaya",
-                                    "gcash",
-                                    "grab_pay"
-                                ],
-                                payment_method_options: {
-                                    card: {
-                                        request_three_d_secure: "any"
-                                    }
-                                },
-                                currency: "USD",
-                                capture_type: "automatic"
+                        attributes: {
+                            amount: parseInt(amount.toString() + "00"),
+                            payment_method_allowed: [
+                                "card",
+                                "paymaya",
+                                "gcash",
+                                "grab_pay"
+                            ],
+                            payment_method_options: {
+                                card: {
+                                    request_three_d_secure: "any"
+                                }
                             },
+                            currency: "PHP",
+                            capture_type: "automatic",
                             metadata: {
-                                userId: userId,
+                                userId: userId || 'anonymous',
                                 campaignId: campaign.id,
                                 campaignTitle: campaign.title,
                             }
-                        }
+                        },
                     }
                 }),
                 { ...this.getHeaders("secret"), validateStatus: () => true } 
@@ -71,6 +70,8 @@ export class PaymentService {
             const getPaymentIntent = await axios.get(`${process.env.PAYMONGO_API_URL}/payment_intents/${paymentIntentId}`,
                 { ...this.getHeaders("secret"), validateStatus: () => true } 
             )
+
+            return getPaymentIntent.data.data;
         } catch (error) {
             throw new InternalServerErrorException("Error retrieving payment intent");
         }
@@ -78,21 +79,20 @@ export class PaymentService {
 
     async attachPaymentIntent(paymentIntentId: string, paymentMethodId: string, clientKey: string) {
         try {
-            const returnUrl = `${process.env.FRONTEND_URL}donate/checkout?client_key=${clientKey}`;
+            const returnUrl = `${process.env.CLIENT_BASE_URL}/donation/check?client_key=${clientKey}`;
 
             const response = await axios.post(`${process.env.PAYMONGO_API_URL}/payment_intents/${paymentIntentId}/attach`,
                 JSON.stringify({
                     data: {
                         attributes: {
                             payment_method: paymentMethodId,
-                            clientKey: clientKey, // this is get in the payment Intent if the key used is public
-                            return_url: returnUrl
-                        }
+                            client_key: clientKey, // this is get in the payment Intent if the key used is public
+                            return_url: returnUrl,
+                        },
                     }
                 }),
                 { ...this.getHeaders("public"), validateStatus: () => true }
             )
-
             return response.data.data;
         } catch (error) {
             throw new InternalServerErrorException("Error attaching payment intent");

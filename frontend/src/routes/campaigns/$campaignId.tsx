@@ -7,7 +7,7 @@ import { Progress } from '@/components/ui/progress'
 import axiosFetch from '@/lib/axios'
 import { CampaignPost } from '@/types/campaign'
 import { useQuery } from '@tanstack/react-query'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { differenceInCalendarDays, format } from 'date-fns'
 import { CalendarDays, Users } from 'lucide-react'
 
@@ -85,7 +85,9 @@ function RouteComponent() {
               </div>
             </CardContent>
             <CardFooter>
-              <Button className="w-full">Donate Now</Button>
+              <Link className='w-full' to='/donation/donate/$donationId' params={{ donationId: campaignId}}>
+                <Button className="w-full">Donate Now</Button>
+              </Link>
             </CardFooter>
           </Card>
           <Card className="mt-6">
