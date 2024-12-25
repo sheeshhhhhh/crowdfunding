@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CampaignService } from 'src/campaign/campaign.service';
-import { PaymentService } from 'src/payment/payment.service';
-import { DonationDto } from './dto/donation.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
 import { RequestUser } from 'src/guards/user.decorator';
+import { PaymentService } from 'src/payment/payment.service';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { DonationDto } from './dto/donation.dto';
 
 @Injectable()
 export class DonationService {
@@ -18,6 +18,7 @@ export class DonationService {
         const campaign = await this.campaignService.getCampaign(campaignId);
 
         const newPaymentIntent = await this.paymentService.createPaymentIntent(amount, userId, campaign);
+        console.log(newPaymentIntent)
         const newPaymentMethod = await this.paymentService.createPaymentMethod(paymentMethod);  
         // meta data in attach payment
         const attachPayment = await this.paymentService.attachPaymentIntent(newPaymentIntent.id, newPaymentMethod.id, newPaymentIntent.attributes?.client_key)
@@ -28,7 +29,7 @@ export class DonationService {
         };
     }
 
-    async checkDonations(userId: string, paymentId: string) {        
+    async checkDonations(userId: string | undefined, paymentId: string) {        
         const getPayment = await this.paymentService.retrievePaymentIntent(paymentId);
 
         if(getPayment.attributes.status !== 'succeeded') {
@@ -60,7 +61,7 @@ export class DonationService {
                 paymentId: paymentId,
                 message: '', // put later on
                 postId: getPayment.attributes.metadata.campaignId,
-                userId: userId,
+                userId: userId || undefined,
             }
         })
 
@@ -87,18 +88,94 @@ export class DonationService {
 
     async checkMyDonations(user: RequestUser, search: string, page: number) {
         try {
-
+            const take = 10;
+            const skip = (page - 1) * take;
 
             const donations = await this.prisma.donation.findMany({
                 where: {
-                    userId: user.id,
-                    
-                }
+                    // get the all the donation from campaigns owners
+                    post: {
+                        userId: user.id
+                    },
+                    // for searching
+                    OR: [
+                        {
+                            post: {
+                                title: {
+                                    contains: search,
+                                    mode: 'insensitive'
+                                }
+                            },
+                        },
+                        {
+                            user: {
+                                username: {
+                                    contains: search,
+                                    mode: 'insensitive'
+                                }
+                            }
+                        }
+                    ]
+                },
+                include: {
+                    user: {
+                        select: {
+                            id: true,
+                            username: true,
+                            profile: true
+                        }
+                    },
+                    post: {
+                        select: {
+                            id: true,
+                            title: true
+                        }
+                    }
+                },
+                skip: skip,
+                take: take,
             })
 
-            return donations;
+            const hasNext = await this.prisma.donation.count({ where: { post: { userId: user.id } } }) > page * take;
+
+            return {
+                donations: donations,
+                hasNext: hasNext,
+            };
         } catch (error) {
-            
+            throw new InternalServerErrorException('Internal server error');
+        }
+    }
+
+    async getDonationStatistics(user: RequestUser) {
+        const totalDonations = await this.prisma.donation.aggregate({
+            where: {
+                userId: user.id,
+            },
+            _sum: {
+                amount: true
+            }
+        })
+
+        const averageDonation = await this.prisma.donation.aggregate({
+            where: {
+                userId: user.id
+            },
+            _avg: {
+                amount: true
+            }
+        })
+
+        const totalDonors = await this.prisma.donation.count({
+            where: {
+                userId: user.id
+            }
+        })
+
+        return {
+            totalDonations: totalDonations._sum.amount,
+            totalDonors: totalDonors,
+            averageDonation: averageDonation._avg.amount
         }
     }
 }

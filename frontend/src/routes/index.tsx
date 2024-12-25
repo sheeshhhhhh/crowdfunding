@@ -43,6 +43,12 @@ function Index() {
     }
   ] 
 
+  const handleLogout = () => {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    window.location.reload();
+  }
+
   return (
     <div className="flex flex-col min-h-screen">
       <header className="bg-white shadow-sm border-b">
@@ -70,9 +76,9 @@ function Index() {
                   <Link href="/dashboard/overview">
                     <Button>Dashboard</Button>
                   </Link>
-                  <Link href="/logout">
-                    <Button variant="outline">Log out</Button>
-                  </Link>
+                  <Button onClick={() => handleLogout()} variant="outline">
+                    Log out
+                  </Button>
                 </div>
               ) : (
                 <div className="space-x-4">
