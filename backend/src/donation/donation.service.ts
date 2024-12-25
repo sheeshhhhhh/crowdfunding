@@ -90,51 +90,54 @@ export class DonationService {
         try {
             const take = 10;
             const skip = (page - 1) * take;
-
             const donations = await this.prisma.donation.findMany({
                 where: {
-                    // get the all the donation from campaigns owners
-                    post: {
-                        userId: user.id
-                    },
-                    // for searching
-                    OR: [
+                    AND: [
                         {
                             post: {
-                                title: {
-                                    contains: search,
-                                    mode: 'insensitive'
-                                }
+                                userId: user.id, // Ensures the post belongs to the user
                             },
                         },
                         {
-                            user: {
-                                username: {
-                                    contains: search,
-                                    mode: 'insensitive'
-                                }
-                            }
-                        }
-                    ]
+                            OR: [
+                                {
+                                    post: {
+                                        title: {
+                                            contains: search,
+                                            mode: 'insensitive',
+                                        },
+                                    },
+                                },
+                                {
+                                    user: {
+                                        username: {
+                                            contains: search,
+                                            mode: 'insensitive',
+                                        },
+                                    },
+                                },
+                            ],
+                        },
+                    ],
                 },
                 include: {
                     user: {
                         select: {
                             id: true,
                             username: true,
-                            profile: true
-                        }
+                            profile: true,
+                        },
                     },
                     post: {
                         select: {
                             id: true,
-                            title: true
-                        }
-                    }
+                            title: true,
+                        },
+                    },
                 },
-                skip: skip,
-                take: take,
-            })
+                skip,
+                take,
+            });
 
             const hasNext = await this.prisma.donation.count({ where: { post: { userId: user.id } } }) > page * take;
 

@@ -26,7 +26,7 @@ export class DonationController {
     @UseGuards(JwtAuthGuard)
     @Get('mydonations')
     async getMyDonations(@User() user: any, @Query() query: { search: string, page: number }) {
-        return this.donationService.checkMyDonations(user.id, query.search, query.page);
+        return this.donationService.checkMyDonations(user, query.search, query.page);
     }
 
     @UseGuards(JwtAuthGuard)

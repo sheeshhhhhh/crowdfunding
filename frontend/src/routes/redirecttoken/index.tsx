@@ -30,7 +30,7 @@ function RouteComponent() {
         localStorage.setItem('access_token', search.access_token)
         localStorage.setItem('refresh_token', search.refresh_token)
     
-        navigate({ to: '/' })
+        navigate({ to: '/', reloadDocument: true })
     }, [])
 
     return (    
