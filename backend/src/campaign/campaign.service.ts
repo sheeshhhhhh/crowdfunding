@@ -4,12 +4,13 @@ import { RequestUser } from 'src/guards/user.decorator';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateCampaignDto, UpdateCampaignDto } from './dto/campaign.dto';
 import { FileUploadService } from 'src/file-upload/file-upload.service';
+import { DonationService } from 'src/donation/donation.service';
 
 @Injectable()
 export class CampaignService {
     constructor(
         private readonly prisma: PrismaService,
-        private readonly fileUpload: FileUploadService
+        private readonly fileUpload: FileUploadService,
     ) {}
 
     async createCampaign(body: CreateCampaignDto, user: RequestUser, file: Express.Multer.File) {
@@ -41,6 +42,60 @@ export class CampaignService {
                 }
             }
             throw new InternalServerErrorException('internal server error');
+        }
+    }
+
+    async getOverview(user: RequestUser) {
+        const userId = user.id;
+
+        const activeCampaigns = await this.prisma.campaignPost.findMany({
+            where: {
+                AND: [
+                    {
+                        userId: userId
+                    },
+                    {
+                        endDate: {
+                            gte: new Date()
+                        },
+                        status: 'ACTIVE'
+                    }
+                ]
+            }
+        });
+
+        const totalDonations = await this.prisma.donation.aggregate({
+            where: {
+                userId: userId
+            },
+            _sum: {
+                amount: true
+            }
+        });
+
+        const averageDonation = await this.prisma.donation.aggregate({
+            where: {
+                userId: userId
+            },
+            _avg: {
+                amount: true
+            }
+        });
+
+        const totalDonors = await this.prisma.donation.aggregate({
+            where: {
+                userId: userId
+            }, 
+            _count: {
+                id: true
+            }
+        });
+
+        return {
+            activeCampaigns,
+            totalDonations,
+            averageDonation,
+            totalDonors,
         }
     }
 

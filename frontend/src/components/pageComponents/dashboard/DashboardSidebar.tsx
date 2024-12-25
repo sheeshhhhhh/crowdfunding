@@ -54,11 +54,11 @@ const DashboardSidebar = () => {
                 </nav>
                 </div>
                 <div className="max-w-[163.3px] mt-auto p-4 space-y-4">
-                    {/* <Link >
-                        <Button className="w-full justify-start gap-2 text-xs">
-                            Create Campaign
+                    <Link to='/campaigns/browse' search={{ page: 1, search: '', filter: '' }}>
+                        <Button className="w-full justify-center gap-2">
+                            view Campaigns
                         </Button>
-                    </Link> */}
+                    </Link>
                     <Button variant="outline" className="w-full justify-start gap-2">
                         <Settings className="h-4 w-4" />
                         Settings

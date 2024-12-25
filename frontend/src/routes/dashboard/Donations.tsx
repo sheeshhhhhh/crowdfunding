@@ -40,7 +40,7 @@ function RouteComponent() {
     })
 
     return (
-        <div className="w-full py-10 px-4">
+        <div className="w-full">
             <h1 className="text-4xl font-bold mb-8">Donations</h1>
             <DonationStastistics />
             <Donations donations={data?.donations} hasNext={data?.hasNext} 

@@ -4,6 +4,7 @@ import { RequestUser } from 'src/guards/user.decorator';
 import { PaymentService } from 'src/payment/payment.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { DonationDto } from './dto/donation.dto';
+import { enUS } from "date-fns/locale";
 
 @Injectable()
 export class DonationService {
@@ -18,7 +19,6 @@ export class DonationService {
         const campaign = await this.campaignService.getCampaign(campaignId);
 
         const newPaymentIntent = await this.paymentService.createPaymentIntent(amount, userId, campaign);
-        console.log(newPaymentIntent)
         const newPaymentMethod = await this.paymentService.createPaymentMethod(paymentMethod);  
         // meta data in attach payment
         const attachPayment = await this.paymentService.attachPaymentIntent(newPaymentIntent.id, newPaymentMethod.id, newPaymentIntent.attributes?.client_key)
@@ -179,6 +179,79 @@ export class DonationService {
             totalDonations: totalDonations._sum.amount,
             totalDonors: totalDonors,
             averageDonation: averageDonation._avg.amount
+        }
+    }
+
+    async getRecentDonations(user: RequestUser) {
+        const donations = await this.prisma.donation.findMany({
+            where: {
+                post: {
+                    userId: user.id
+                }
+            },
+            orderBy: {
+                createdAt: 'desc'
+            },
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        username: true,
+                        profile: true,
+                        email: true   
+                    }
+                }
+            },
+            take: 10
+        });
+
+        return donations;
+    }
+
+    async getMonthlyDonations(user: RequestUser) {
+        const donations = await this.prisma.donation.findMany({
+            where: {
+                userId: user.id,
+            }
+        });
+
+        const monthlyDonations = donations.reduce((acc, donation) => {
+            const month = donation.createdAt.getMonth();
+            acc[month] = (acc[month] || 0) + donation.amount;
+            return acc;
+        }, {});
+
+        let monthlyDonationsArray = [];
+        for (let key in monthlyDonations) {
+            monthlyDonationsArray.push({
+                month: enUS.localize.month(key, { width: 'abbreviated' }),
+                amount: monthlyDonations[key] || 0
+            });
+        }
+
+        return monthlyDonationsArray;
+    }
+
+    async getOverview(user: RequestUser) {
+        const userId = user.id;
+        const { totalDonations, averageDonation, totalDonors } = await this.getDonationStatistics(user);
+        const recentDonations = await this.getRecentDonations(user);
+        const monthlyDonationsStats = await this.getMonthlyDonations(user);
+
+        const activeCampaignscount = await this.prisma.campaignPost.count({
+            where: {
+                userId: userId,
+                status: 'ACTIVE'
+            }
+        });
+
+        return {
+            activeCampaignscount,
+            totalDonations,
+            averageDonation,
+            totalDonors,
+            recentDonations,
+            monthlyDonationsStats
         }
     }
 }

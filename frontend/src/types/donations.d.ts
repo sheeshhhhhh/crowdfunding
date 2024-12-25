@@ -34,3 +34,25 @@ export type DonationInDashboard = {
         profile: user['profile'];
     }
 } & Donation
+
+export type RecentDonation = {
+    user: {
+        id: user['id'];
+        username: user['username'];
+        profile: user['profile'];
+        email: user['email'];
+    }
+} & Donation
+
+export type montlyDonationsStats = {
+    month: string,
+    amount: number
+}[]
+export type DonationOverview = {
+    activeCampaignscount: number,
+    totalDonations: number,
+    averageDonation: number,
+    totalDonors: number,
+    recentDonations: RecentDonation[],
+    monthlyDonationsStats: montlyDonationsStats
+}

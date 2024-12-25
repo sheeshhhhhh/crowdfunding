@@ -1,7 +1,10 @@
 import { AvatarFallback, AvatarImage, Avatar } from "@/components/ui/avatar"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { DonationOverview } from "@/types/donations"
 import { CreditCard, Layers, User } from "lucide-react"
+import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts"
+import LoadingSpinner from "@/components/common/LoadingSpinner"
 
 const donationData = [
   { name: 'Jan', amount: 4000 },
@@ -12,14 +15,40 @@ const donationData = [
   { name: 'Jun', amount: 2390 },
 ]
 
-const Overview = () => {
+const chartConfig = {
+    month: {
+        label: 'Month'
+    },
+    amount: {
+        label: 'Amount',
+    }
+} satisfies ChartConfig
+
+type OverviewProps = {
+    data: DonationOverview | undefined,
+    isLoading: boolean
+} 
+
+const Overview = ({
+    data,
+    isLoading
+}: OverviewProps) => {
+
+    if (isLoading) {
+        return <LoadingSpinner />
+    }
+
+    if(!data) {
+        return <div>Failed to fetch data</div>
+    }
+
     return (
         <div className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                 <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">
-                    Total Raised
+                        Total Raised
                     </CardTitle>
                     <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -35,7 +64,7 @@ const Overview = () => {
                     </svg>
                 </CardHeader>
                 <CardContent>
-                    <div className="text-2xl font-bold">$45,231.89</div>
+                    <div className="text-2xl font-bold">${data?.totalDonations}</div>
                     <p className="text-xs text-muted-foreground">
                     +20.1% from last month
                     </p>
@@ -49,7 +78,7 @@ const Overview = () => {
                     <Layers className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                    <div className="text-2xl font-bold">3</div>
+                    <div className="text-2xl font-bold">{data?.activeCampaignscount}</div>
                     <p className="text-xs text-muted-foreground">
                     +2 new this month
                     </p>
@@ -61,7 +90,7 @@ const Overview = () => {
                     <User className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                    <div className="text-2xl font-bold">1,234</div>
+                    <div className="text-2xl font-bold">{data?.totalDonors}</div>
                     <p className="text-xs text-muted-foreground">
                     +19% from last month
                     </p>
@@ -75,7 +104,7 @@ const Overview = () => {
                     <CreditCard className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                    <div className="text-2xl font-bold">$36.25</div>
+                    <div className="text-2xl font-bold">${data.averageDonation}</div>
                     <p className="text-xs text-muted-foreground">
                     +5.2% from last month
                     </p>
@@ -88,13 +117,16 @@ const Overview = () => {
                     <CardTitle>Donation Overview</CardTitle>
                 </CardHeader>
                 <CardContent className="pl-2">
-                    <ResponsiveContainer width="100%" height={350}>
-                    <BarChart data={donationData}>
-                        <XAxis dataKey="name" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
-                        <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `$${value}`} />
-                        <Bar dataKey="amount" fill="#adfa1d" radius={[4, 4, 0, 0]} />
-                    </BarChart>
-                    </ResponsiveContainer>
+                    <ChartContainer config={chartConfig}>
+                        <ResponsiveContainer width="100%" height={350}>
+                            <BarChart accessibilityLayer data={data?.monthlyDonationsStats}>
+                                <XAxis dataKey="month" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
+                                <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `$${value}`} />
+                                <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="dashed" />} />
+                                <Bar dataKey="amount" fill="#adfa1d" radius={[4, 4, 0, 0]} />
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </ChartContainer>
                 </CardContent>
                 </Card>
                 <Card className="col-span-3">
@@ -108,26 +140,21 @@ const Overview = () => {
                 </CardHeader>
                 <CardContent>
                     <div className="space-y-8">
-                    {[
-                        { name: 'Olivia Martin', email: 'olivia.martin@email.com', amount: '$1,999.00' },
-                        { name: 'Jackson Lee', email: 'jackson.lee@email.com', amount: '$39.00' },
-                        { name: 'Isabella Nguyen', email: 'isabella.nguyen@email.com', amount: '$299.00' },
-                        { name: 'William Kim', email: 'will@email.com', amount: '$99.00' },
-                    ].map((donation, index) => (
-                        <div key={index} className="flex items-center">
-                        <Avatar className="h-9 w-9">
-                            <AvatarImage src={`/avatars/${index + 1}.png`} alt="Avatar" />
-                            <AvatarFallback>{donation.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                        </Avatar>
-                        <div className="ml-4 space-y-1">
-                            <p className="text-sm font-medium leading-none">{donation.name}</p>
-                            <p className="text-sm text-muted-foreground">
-                            {donation.email}
-                            </p>
-                        </div>
-                        <div className="ml-auto font-medium">{donation.amount}</div>
-                        </div>
-                    ))}
+                        {data.recentDonations.map((donation, index) => (
+                            <div key={index} className="flex items-center">
+                            <Avatar className="h-9 w-9">
+                                <AvatarImage src={donation.user?.profile} alt="Avatar" />
+                                <AvatarFallback>{donation.user?.username[0] || 'A'}</AvatarFallback>
+                            </Avatar>
+                            <div className="ml-4 space-y-1">
+                                <p className="text-sm font-medium leading-none">{donation.user?.username || 'Anonymous'}</p>
+                                <p className="text-sm text-muted-foreground">
+                                {donation.user?.email || 'No Email'}
+                                </p>
+                            </div>
+                            <div className="ml-auto font-medium">${donation.amount}</div>
+                            </div>
+                        ))}
                     </div>
                 </CardContent>
                 </Card>

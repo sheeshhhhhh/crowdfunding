@@ -42,7 +42,6 @@ enum CampaignStatus {
   FAILED
 }
 
-
 // campaign
 model CampaignPost {
   id          String   @id @default(cuid())
