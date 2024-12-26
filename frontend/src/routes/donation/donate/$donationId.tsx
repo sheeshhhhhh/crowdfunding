@@ -21,6 +21,7 @@ function RouteComponent() {
     const [isLoading, setIsLoading] = useState(false)
     const [paymentMethod , setPaymentMethod] = useState<string>();
     const [amount, setAmount] = useState<number>();
+    const [message, setMessage] = useState<string>('');
     const [billingInfo, setBillingInfo] = useState({
         firstName: '',
         lastName: '',
@@ -135,7 +136,7 @@ function RouteComponent() {
                         </div>
                         <div className="flex items-center space-x-2">
                             <RadioGroupItem value="credit-card" id="credit-card" />
-                            <Label htmlFor="credit-card">Credit Card</Label>
+                            <Label htmlFor="card">Credit Card</Label>
                         </div>
                         </RadioGroup>
                     </CardContent>
@@ -192,9 +193,6 @@ function RouteComponent() {
                         </div>
                         </div>
                     </CardContent>
-                    <CardFooter>
-                        <Button type="submit" className="w-full">Complete Donation</Button>
-                    </CardFooter>
                 </Card>
                 <Button type="submit" className="w-full mt-3">Donate</Button>
             </form>

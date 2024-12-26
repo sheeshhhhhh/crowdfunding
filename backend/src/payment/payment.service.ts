@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { CampaignPost } from '@prisma/client';
 import axios from 'axios';
+import { BillingInformation } from 'src/donation/dto/donation.dto';
 
 @Injectable()
 export class PaymentService {
@@ -28,6 +29,7 @@ export class PaymentService {
     amount: number,
     userId: string,
     campaign: CampaignPost,
+    BillingInformation: BillingInformation,
   ) {
     try {
       if (amount < 20) {
@@ -52,6 +54,7 @@ export class PaymentService {
                 userId: userId || 'anonymous',
                 campaignId: campaign.id,
                 campaignTitle: campaign.title,
+                ...BillingInformation,
               },
             },
           },

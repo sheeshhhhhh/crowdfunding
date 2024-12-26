@@ -16,6 +16,7 @@ import { Route as SignupIndexImport } from './routes/signup/index'
 import { Route as RedirecttokenIndexImport } from './routes/redirecttoken/index'
 import { Route as LoginIndexImport } from './routes/login/index'
 import { Route as DashboardIndexImport } from './routes/dashboard/index'
+import { Route as DonationSendMessageImport } from './routes/donation/sendMessage'
 import { Route as DonationCheckImport } from './routes/donation/check'
 import { Route as DashboardOverviewImport } from './routes/dashboard/Overview'
 import { Route as DashboardInboxImport } from './routes/dashboard/Inbox'
@@ -56,6 +57,12 @@ const LoginIndexRoute = LoginIndexImport.update({
 const DashboardIndexRoute = DashboardIndexImport.update({
   id: '/dashboard/',
   path: '/dashboard/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const DonationSendMessageRoute = DonationSendMessageImport.update({
+  id: '/donation/sendMessage',
+  path: '/donation/sendMessage',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -186,6 +193,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DonationCheckImport
       parentRoute: typeof rootRoute
     }
+    '/donation/sendMessage': {
+      id: '/donation/sendMessage'
+      path: '/donation/sendMessage'
+      fullPath: '/donation/sendMessage'
+      preLoaderRoute: typeof DonationSendMessageImport
+      parentRoute: typeof rootRoute
+    }
     '/dashboard/': {
       id: '/dashboard/'
       path: '/dashboard'
@@ -243,6 +257,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/Inbox': typeof DashboardInboxRoute
   '/dashboard/Overview': typeof DashboardOverviewRoute
   '/donation/check': typeof DonationCheckRoute
+  '/donation/sendMessage': typeof DonationSendMessageRoute
   '/dashboard': typeof DashboardIndexRoute
   '/login': typeof LoginIndexRoute
   '/redirecttoken': typeof RedirecttokenIndexRoute
@@ -261,6 +276,7 @@ export interface FileRoutesByTo {
   '/dashboard/Inbox': typeof DashboardInboxRoute
   '/dashboard/Overview': typeof DashboardOverviewRoute
   '/donation/check': typeof DonationCheckRoute
+  '/donation/sendMessage': typeof DonationSendMessageRoute
   '/dashboard': typeof DashboardIndexRoute
   '/login': typeof LoginIndexRoute
   '/redirecttoken': typeof RedirecttokenIndexRoute
@@ -280,6 +296,7 @@ export interface FileRoutesById {
   '/dashboard/Inbox': typeof DashboardInboxRoute
   '/dashboard/Overview': typeof DashboardOverviewRoute
   '/donation/check': typeof DonationCheckRoute
+  '/donation/sendMessage': typeof DonationSendMessageRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/login/': typeof LoginIndexRoute
   '/redirecttoken/': typeof RedirecttokenIndexRoute
@@ -300,6 +317,7 @@ export interface FileRouteTypes {
     | '/dashboard/Inbox'
     | '/dashboard/Overview'
     | '/donation/check'
+    | '/donation/sendMessage'
     | '/dashboard'
     | '/login'
     | '/redirecttoken'
@@ -317,6 +335,7 @@ export interface FileRouteTypes {
     | '/dashboard/Inbox'
     | '/dashboard/Overview'
     | '/donation/check'
+    | '/donation/sendMessage'
     | '/dashboard'
     | '/login'
     | '/redirecttoken'
@@ -334,6 +353,7 @@ export interface FileRouteTypes {
     | '/dashboard/Inbox'
     | '/dashboard/Overview'
     | '/donation/check'
+    | '/donation/sendMessage'
     | '/dashboard/'
     | '/login/'
     | '/redirecttoken/'
@@ -353,6 +373,7 @@ export interface RootRouteChildren {
   DashboardInboxRoute: typeof DashboardInboxRoute
   DashboardOverviewRoute: typeof DashboardOverviewRoute
   DonationCheckRoute: typeof DonationCheckRoute
+  DonationSendMessageRoute: typeof DonationSendMessageRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
   LoginIndexRoute: typeof LoginIndexRoute
   RedirecttokenIndexRoute: typeof RedirecttokenIndexRoute
@@ -371,6 +392,7 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardInboxRoute: DashboardInboxRoute,
   DashboardOverviewRoute: DashboardOverviewRoute,
   DonationCheckRoute: DonationCheckRoute,
+  DonationSendMessageRoute: DonationSendMessageRoute,
   DashboardIndexRoute: DashboardIndexRoute,
   LoginIndexRoute: LoginIndexRoute,
   RedirecttokenIndexRoute: RedirecttokenIndexRoute,
@@ -398,6 +420,7 @@ export const routeTree = rootRoute
         "/dashboard/Inbox",
         "/dashboard/Overview",
         "/donation/check",
+        "/donation/sendMessage",
         "/dashboard/",
         "/login/",
         "/redirecttoken/",
@@ -432,6 +455,9 @@ export const routeTree = rootRoute
     },
     "/donation/check": {
       "filePath": "donation/check.tsx"
+    },
+    "/donation/sendMessage": {
+      "filePath": "donation/sendMessage.tsx"
     },
     "/dashboard/": {
       "filePath": "dashboard/index.tsx"

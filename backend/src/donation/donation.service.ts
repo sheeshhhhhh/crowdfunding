@@ -1,9 +1,9 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CampaignService } from 'src/campaign/campaign.service';
 import { RequestUser } from 'src/guards/user.decorator';
 import { PaymentService } from 'src/payment/payment.service';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { DonationDto } from './dto/donation.dto';
+import { BillingInformation, DonationDto } from './dto/donation.dto';
 import { enUS } from 'date-fns/locale';
 
 @Injectable()
@@ -17,7 +17,7 @@ export class DonationService {
   // also include billing information
   async createDonationGateway(
     userId: string,
-    { amount, paymentMethod, campaignId }: DonationDto,
+    { amount, paymentMethod, campaignId, ...BillingInformation }: DonationDto,
   ) {
     const campaign = await this.campaignService.getCampaign(campaignId);
 
@@ -25,10 +25,10 @@ export class DonationService {
       amount,
       userId,
       campaign,
+      {...BillingInformation},
     );
-    const newPaymentMethod =
-      await this.paymentService.createPaymentMethod(paymentMethod);
-    // meta data in attach payment
+    console.log(newPaymentIntent.attributes.metadata);
+    const newPaymentMethod = await this.paymentService.createPaymentMethod(paymentMethod);
     const attachPayment = await this.paymentService.attachPaymentIntent(
       newPaymentIntent.id,
       newPaymentMethod.id,
@@ -42,8 +42,7 @@ export class DonationService {
   }
 
   async checkDonations(userId: string | undefined, paymentId: string) {
-    const getPayment =
-      await this.paymentService.retrievePaymentIntent(paymentId);
+    const getPayment = await this.paymentService.retrievePaymentIntent(paymentId);
 
     if (getPayment.attributes.status !== 'succeeded') {
       return {
@@ -67,14 +66,23 @@ export class DonationService {
         message: 'Donation already exist',
       };
     }
+
     // if it is payed
     const donationData = await this.prisma.donation.create({
       data: {
         amount: getPayment.attributes.amount / 100,
         paymentId: paymentId,
-        message: '', // put later on
+        message: '', 
         postId: getPayment.attributes.metadata.campaignId,
         userId: userId || undefined,
+        // billing Information
+        firstName: getPayment.attributes.metadata.firstName,
+        lastName: getPayment.attributes.metadata.lastName,
+        email: getPayment.attributes.metadata.email,
+        address: getPayment.attributes.metadata.address,
+        city: getPayment.attributes.metadata.city,
+        postalCode: getPayment.attributes.metadata.postalCode,
+        country: getPayment.attributes.metadata.country,
       },
     });
 
@@ -271,5 +279,41 @@ export class DonationService {
       recentDonations,
       monthlyDonationsStats,
     };
+  }
+
+  async getDonation(donationId: string) {
+    const donation = await this.prisma.donation.findUnique({
+      where: {
+        id: donationId,
+      },
+      include: {
+        post: {
+          select: {
+            id: true,
+            title: true,
+            headerImage: true,
+          },
+        },
+      },
+    });
+
+    if(!donation) {
+      throw new NotFoundException('Donation not found');
+    }
+
+    return donation;
+  }
+
+  async editUpdateMessage(message: string, donationId: string) {
+    const updateMessage = await this.prisma.donation.update({
+      where: {
+        id: donationId,
+      },
+      data: {
+        message: message,
+      },
+    });
+
+    return updateMessage;
   }
 }

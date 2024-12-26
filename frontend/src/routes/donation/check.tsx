@@ -1,7 +1,8 @@
 import CheckMark from '@/components/common/CheckMark'
 import LoadingSpinner from '@/components/common/LoadingSpinner'
+import { Button } from '@/components/ui/button'
 import axiosFetch from '@/lib/axios'
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 
@@ -23,10 +24,12 @@ export const Route = createFileRoute('/donation/check')({
 function RouteComponent() {
     const navigate = useNavigate()
     const [isLoading, setIsLoading] = useState(false)
-    const { payment_intent_id } = Route.useSearch()
+    const [success, setSuccess] = useState<boolean | undefined>(undefined)
 
-    // have limit of 5 tries,
-    // if payment intent is not succeeded, redirect to error page
+    const [donationId, setDonationId] = useState<string>('')
+    const [campaignId, setCampaignId] = useState<string>('')
+
+    const { payment_intent_id } = Route.useSearch()
 
     useEffect(() => {
         const checkPaymentIntentStatus = async () => {
@@ -35,16 +38,18 @@ function RouteComponent() {
                 const saveDonation = await axiosFetch.post('/donation/check', {
                     paymentId: payment_intent_id,
                 })    
-                setIsLoading(false)
-                
-                if(saveDonation.data.success === true) {
-                    await new Promise((resolve) => setTimeout(resolve, 2000))
 
-                    navigate({ to: '/campaigns/$campaignId', params: { campaignId: saveDonation.data.donation.postId } })
+                if(saveDonation.data.success === true) {
+                    setSuccess(true)
+                    setDonationId(saveDonation.data.donation.id)
+                    setCampaignId(saveDonation.data.donation.postId)
+                    // navigate({ to: '/campaigns/$campaignId', params: { campaignId: saveDonation.data.donation.postId } })
                 }
             } catch (error) {
-                setIsLoading(false)
                 toast.error('Error checking payment intent')
+                setSuccess(false)
+            } finally {
+                setIsLoading(false)
             }
         }
         
@@ -52,14 +57,56 @@ function RouteComponent() {
     }, [])
 
     return (
-        <div className='min-h-screen flex justify-center items-center'>
+        <div className='min-h-screen flex flex-col gap-4 justify-center items-center'>
             <div>
                 {
-                    isLoading 
+                    isLoading
                     ? <LoadingSpinner className='text-[#07b481]' /> : 
-                    <div className='flex items-center'>
-                        <h1 className='text-[#07b481] font-bold text-3xl'>Success</h1>
-                        <CheckMark className='ml-1 h-[40px] w-[40px]' />
+                    <div className=''>
+                        {success === true && success !== undefined &&
+                            <>
+                                <div className='flex items-center gap-2'>
+                                    <h1 className='text-[#07b481] font-bold text-3xl'>Success</h1>
+                                    <CheckMark className='ml-1 h-[40px] w-[40px]' />
+                                </div>
+                                <div className='mt-3'>
+                                    <p className='font-bold text-2xl text-[#07b481]'>
+                                        Thank you for Donating!
+                                    </p>
+                                </div>
+                            </>
+                        }
+                        {success === false && success !== undefined &&
+                            <>
+                                {/* handle this later when payment is not received or donation already exist */}
+                                <div className='flex items-center gap-2'>
+                                    <h1 className='text-red-500 font-bold text-3xl'>Failed</h1>
+
+                                </div>
+                                <div className='mt-3'>
+                                    <p className='font-bold text-2xl text-red-500'>
+                                        Payment is not yet received!
+                                    </p>
+                                </div>
+                            </>
+                        }
+                    </div>
+                }
+            </div>
+            <div>
+                {
+                    success &&
+                    <div className='flex gap-4'>
+                        <Link to='/campaigns/$campaignId' params={{ campaignId: campaignId }}>
+                            <Button>
+                                Go back
+                            </Button>
+                        </Link>
+                        <Link to='/donation/sendMessage' search={{ donationId: donationId }}>
+                            <Button>
+                                Send A Message
+                            </Button>
+                        </Link>
                     </div>
                 }
             </div>
