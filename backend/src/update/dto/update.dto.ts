@@ -1,10 +1,9 @@
-import { IsString } from "class-validator";
+import { IsString } from 'class-validator';
 
 export class CreateUpdateDto {
-    @IsString()
-    message: string;
+  @IsString()
+  message: string;
 
-    @IsString()
-    campaignId: string;
+  @IsString()
+  campaignId: string;
 }
-

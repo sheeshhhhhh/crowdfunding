@@ -7,6 +7,6 @@ import { CampaignModule } from 'src/campaign/campaign.module';
 @Module({
   providers: [DonationService],
   controllers: [DonationController],
-  imports: [PaymentModule, CampaignModule]
+  imports: [PaymentModule, CampaignModule],
 })
 export class DonationModule {}

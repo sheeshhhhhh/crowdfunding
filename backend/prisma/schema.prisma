@@ -93,12 +93,14 @@ model Donation {
   post        CampaignPost @relation(fields: [postId], references: [id])
   paymentId   String?
 
-  // payment info
-  // paymentId   String
-  // paymentType String
-  // paymentStatus String
-  // paymentDate DateTime
-  // payerName String
+  // payment billing information
+  FirstName String
+  LastName  String
+  Email     String
+  Address   String
+  City      String
+  PostalCode String
+  Country    String
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

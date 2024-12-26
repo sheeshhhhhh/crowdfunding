@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import axiosFetch from '@/lib/axios'
 import { CampaignPost } from '@/types/campaign'
 import { useQuery } from '@tanstack/react-query'
@@ -64,7 +65,6 @@ function RouteComponent() {
     }
 
     const handleDonation = async (e: React.FormEvent<HTMLFormElement>) => {
-
         try {
             e.preventDefault()
 
@@ -141,7 +141,7 @@ function RouteComponent() {
                     </CardContent>
                 </Card>
 
-                {/* <Card className="mt-6">
+                <Card className="mt-6">
                     <CardHeader>
                         <CardTitle>Billing Information</CardTitle>
                         <CardDescription>Please enter your billing details</CardDescription>
@@ -195,7 +195,7 @@ function RouteComponent() {
                     <CardFooter>
                         <Button type="submit" className="w-full">Complete Donation</Button>
                     </CardFooter>
-                </Card> */}
+                </Card>
                 <Button type="submit" className="w-full mt-3">Donate</Button>
             </form>
             </div>

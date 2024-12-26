@@ -17,7 +17,7 @@ export class CreateCampaignDto {
 }
 
 export class UpdateCampaignDto extends CreateCampaignDto {
-    // @IsString()
-    // @IsEnum(['ACTIVE', 'SUCCESS', 'FAILED'])
-    // status: CampaignStatus;
+  // @IsString()
+  // @IsEnum(['ACTIVE', 'SUCCESS', 'FAILED'])
+  // status: CampaignStatus;
 }

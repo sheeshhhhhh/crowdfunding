@@ -17,12 +17,12 @@ import { JwtStrategy } from 'src/guards/jwt.authguard';
     }),
   ],
   providers: [
-    AuthService, 
+    AuthService,
     LocalStrategy,
     GoogleStrategy,
     FacebookStrategy,
-    JwtStrategy
+    JwtStrategy,
   ],
-  controllers: [AuthController]
+  controllers: [AuthController],
 })
 export class AuthModule {}

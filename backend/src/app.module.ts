@@ -11,7 +11,16 @@ import { DonationModule } from './donation/donation.module';
 import { UpdateModule } from './update/update.module';
 
 @Module({
-  imports: [AuthModule, PrismaModule, ConfigModule.forRoot({ isGlobal: true }), CampaignModule, FileUploadModule, PaymentModule, DonationModule, UpdateModule],
+  imports: [
+    AuthModule,
+    PrismaModule,
+    ConfigModule.forRoot({ isGlobal: true }),
+    CampaignModule,
+    FileUploadModule,
+    PaymentModule,
+    DonationModule,
+    UpdateModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
