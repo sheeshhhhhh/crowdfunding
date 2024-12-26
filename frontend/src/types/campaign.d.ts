@@ -1,3 +1,5 @@
+import { Update } from "./update";
+
 const CampaignStatus = {
     ACTIVE = "ACTIVE",
     SUCCESS = "SUCCESS",
@@ -23,4 +25,8 @@ export type CampaignPost = {
     createdAt: string,
     updatedAt: string,
     endDate?: string
+}
+
+export type CampaignPostWithUpdates = CampaignPost & {
+    updates: Update[]
 }

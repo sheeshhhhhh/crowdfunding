@@ -8,9 +8,10 @@ import { CampaignModule } from './campaign/campaign.module';
 import { FileUploadModule } from './file-upload/file-upload.module';
 import { PaymentModule } from './payment/payment.module';
 import { DonationModule } from './donation/donation.module';
+import { UpdateModule } from './update/update.module';
 
 @Module({
-  imports: [AuthModule, PrismaModule, ConfigModule.forRoot({ isGlobal: true }), CampaignModule, FileUploadModule, PaymentModule, DonationModule],
+  imports: [AuthModule, PrismaModule, ConfigModule.forRoot({ isGlobal: true }), CampaignModule, FileUploadModule, PaymentModule, DonationModule, UpdateModule],
   controllers: [AppController],
   providers: [AppService],
 })

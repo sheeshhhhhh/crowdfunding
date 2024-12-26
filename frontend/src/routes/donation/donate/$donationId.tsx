@@ -4,7 +4,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import axiosFetch from '@/lib/axios'
 import { CampaignPost } from '@/types/campaign'
 import { useQuery } from '@tanstack/react-query'

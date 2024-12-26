@@ -45,60 +45,6 @@ export class CampaignService {
         }
     }
 
-    async getOverview(user: RequestUser) {
-        const userId = user.id;
-
-        const activeCampaigns = await this.prisma.campaignPost.findMany({
-            where: {
-                AND: [
-                    {
-                        userId: userId
-                    },
-                    {
-                        endDate: {
-                            gte: new Date()
-                        },
-                        status: 'ACTIVE'
-                    }
-                ]
-            }
-        });
-
-        const totalDonations = await this.prisma.donation.aggregate({
-            where: {
-                userId: userId
-            },
-            _sum: {
-                amount: true
-            }
-        });
-
-        const averageDonation = await this.prisma.donation.aggregate({
-            where: {
-                userId: userId
-            },
-            _avg: {
-                amount: true
-            }
-        });
-
-        const totalDonors = await this.prisma.donation.aggregate({
-            where: {
-                userId: userId
-            }, 
-            _count: {
-                id: true
-            }
-        });
-
-        return {
-            activeCampaigns,
-            totalDonations,
-            averageDonation,
-            totalDonors,
-        }
-    }
-
     async getMyCampaigns(user: RequestUser) {
         const userId = user?.id;
 
@@ -147,6 +93,12 @@ export class CampaignService {
                         username: true,
                         id: true
                     }
+                },
+                updates: {
+                    orderBy: {
+                        createdAt: 'desc'
+                    },
+                    take: 1
                 }
             }
         });

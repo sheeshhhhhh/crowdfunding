@@ -59,7 +59,7 @@ model CampaignPost {
   donations   Donation[]
 
   user        User     @relation(fields: [userId], references: [id])
-
+  updates     Update[]
   // add per month report?
 
   createdAt   DateTime @default(now())
@@ -67,6 +67,18 @@ model CampaignPost {
   endDate     DateTime?
 
   @@unique([userId, title])
+}
+
+model Update {
+  id          String   @id @default(cuid())
+  postId      String
+
+  message     String
+
+  post        CampaignPost @relation(fields: [postId], references: [id])
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Donation { 
