@@ -62,8 +62,9 @@ export class DonationService {
 
     if (checkDonation) {
       return {
-        success: false,
+        success: true,
         message: 'Donation already exist',
+        donation: checkDonation,
       };
     }
 

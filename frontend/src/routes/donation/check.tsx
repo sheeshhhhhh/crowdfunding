@@ -22,7 +22,6 @@ export const Route = createFileRoute('/donation/check')({
 })
 
 function RouteComponent() {
-    const navigate = useNavigate()
     const [isLoading, setIsLoading] = useState(false)
     const [success, setSuccess] = useState<boolean | undefined>(undefined)
 
@@ -31,28 +30,29 @@ function RouteComponent() {
 
     const { payment_intent_id } = Route.useSearch()
 
-    useEffect(() => {
-        const checkPaymentIntentStatus = async () => {
-            setIsLoading(true)
-            try {
-                const saveDonation = await axiosFetch.post('/donation/check', {
-                    paymentId: payment_intent_id,
-                })    
+    const checkPaymentIntentStatus = async () => {
+        setIsLoading(true)
+        try {
+            const saveDonation = await axiosFetch.post('/donation/check', {
+                paymentId: payment_intent_id,
+            })    
 
-                if(saveDonation.data.success === true) {
-                    setSuccess(true)
-                    setDonationId(saveDonation.data.donation.id)
-                    setCampaignId(saveDonation.data.donation.postId)
-                    // navigate({ to: '/campaigns/$campaignId', params: { campaignId: saveDonation.data.donation.postId } })
-                }
-            } catch (error) {
-                toast.error('Error checking payment intent')
+            if(saveDonation.data.success === true) {
+                setSuccess(true)
+                setDonationId(saveDonation.data.donation.id)
+                setCampaignId(saveDonation.data.donation.postId)
+            } else {            
                 setSuccess(false)
-            } finally {
-                setIsLoading(false)
             }
+        } catch (error) {
+            toast.error('Error checking payment intent')
+            setSuccess(false)
+        } finally {
+            setIsLoading(false)
         }
-        
+    }
+
+    useEffect(() => {        
         checkPaymentIntentStatus()
     }, [])
 
@@ -78,7 +78,6 @@ function RouteComponent() {
                         }
                         {success === false && success !== undefined &&
                             <>
-                                {/* handle this later when payment is not received or donation already exist */}
                                 <div className='flex items-center gap-2'>
                                     <h1 className='text-red-500 font-bold text-3xl'>Failed</h1>
 
@@ -88,6 +87,9 @@ function RouteComponent() {
                                         Payment is not yet received!
                                     </p>
                                 </div>
+                                <Button onClick={checkPaymentIntentStatus} className='mt-4'>
+                                    Try Again
+                                </Button>
                             </>
                         }
                     </div>
