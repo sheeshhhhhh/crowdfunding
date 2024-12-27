@@ -27,7 +27,6 @@ export class DonationService {
       campaign,
       {...BillingInformation},
     );
-    console.log(newPaymentIntent.attributes.metadata);
     const newPaymentMethod = await this.paymentService.createPaymentMethod(paymentMethod);
     const attachPayment = await this.paymentService.attachPaymentIntent(
       newPaymentIntent.id,

@@ -67,7 +67,7 @@ function RouteComponent() {
             <div>
                 <div className='flex justify-between items-center'>
                     <h2 className="text-2xl font-bold mb-2">Send a message to the donor</h2>
-                    <p className='text-lg font-medium'>Donated: ${CampaignInfo.amount}</p>
+                    <p className='text-lg font-medium'>Donated: ${CampaignInfo?.amount}</p>
                 </div>
                 <div>
                     <Label htmlFor='messageInput'>Message</Label>

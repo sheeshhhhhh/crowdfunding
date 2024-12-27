@@ -9,6 +9,7 @@ import { FileUploadModule } from './file-upload/file-upload.module';
 import { PaymentModule } from './payment/payment.module';
 import { DonationModule } from './donation/donation.module';
 import { UpdateModule } from './update/update.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { UpdateModule } from './update/update.module';
     PaymentModule,
     DonationModule,
     UpdateModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -135,8 +135,8 @@ function RouteComponent() {
                             <Label htmlFor="gcash">GCash</Label>
                         </div>
                         <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="credit-card" id="credit-card" />
-                            <Label htmlFor="card">Credit Card</Label>
+                            <RadioGroupItem value="card" id="credit-card" />
+                            <Label htmlFor="card">Card</Label>
                         </div>
                         </RadioGroup>
                     </CardContent>

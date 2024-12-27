@@ -2,7 +2,7 @@ import CheckMark from '@/components/common/CheckMark'
 import LoadingSpinner from '@/components/common/LoadingSpinner'
 import { Button } from '@/components/ui/button'
 import axiosFetch from '@/lib/axios'
-import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 
