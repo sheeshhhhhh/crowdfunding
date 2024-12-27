@@ -1,4 +1,5 @@
 import LoadingSpinner from '@/components/common/LoadingSpinner'
+import OpenGraph from '@/components/common/OpenGraph'
 import CreateUpdate from '@/components/pageComponents/updates/CreateUpdate'
 import UpdateCard from '@/components/pageComponents/updates/UpdateCard'
 import ViewAllUpdates from '@/components/pageComponents/updates/ViewAllUpdates'
@@ -13,15 +14,16 @@ import axiosFetch from '@/lib/axios'
 import { CampaignPostWithUpdates } from '@/types/campaign'
 import { useQuery } from '@tanstack/react-query'
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { differenceInCalendarDays, format } from 'date-fns'
-import { CalendarDays, Users } from 'lucide-react'
-import { useState } from 'react'
+import { differenceInCalendarDays, format, set } from 'date-fns'
+import { CalendarDays, Users, Clipboard, Check } from 'lucide-react'
+import { useEffect, useState } from 'react'
 
 export const Route = createFileRoute('/campaigns/$campaignId')({
   component: RouteComponent,
 })
 
 function RouteComponent() {
+  const [copyLink, setCopyLink] = useState(false)
   const [readMore, setReadMore] = useState(false)
   const { user } = useAuthContext()
   const { campaignId } = Route.useParams()
@@ -34,6 +36,21 @@ function RouteComponent() {
     },
     refetchOnWindowFocus: false
   })
+
+  useEffect(() => {
+    if (!copyLink) {      
+      return
+    }
+
+    navigator.clipboard.writeText(`${import.meta.env.VITE_BASE_URL}/campaigns/${campaignId}`)
+    const copyTimer = setTimeout(() => {
+      setCopyLink(false)
+    }, 3000)
+
+    return () => {
+      clearTimeout(copyTimer)
+    }
+  }, [copyLink])
 
   // maybe create a s skeleton loader for the campaign details
   if(isLoading) {
@@ -55,6 +72,7 @@ function RouteComponent() {
 
   return (
     <div className="container mx-auto py-10">
+      <OpenGraph title={campaign.title} image={campaign.headerImage} url={`${import.meta.env.VITE_BASE_URL}/campaigns/${campaign.id}`} />
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2">
           <h1 className="text-4xl font-bold mb-7">{campaign.title}</h1>
@@ -79,16 +97,9 @@ function RouteComponent() {
             </div>
             <div>
               <UpdateCard user={campaign.user} update={campaign.updates[0] || undefined} />
-              {/* <button className='text-muted-foreground underline underline-offset-2 mt-3'>
-                see All Update
-              </button> */}
               <ViewAllUpdates user={campaign.user} campaignId={campaignId} />
             </div>
           </div>
-
-          {/* <div className="prose max-w-none">
-             <ReactMarkdown>{campaign.content}</ReactMarkdown>
-          </div> */}
         </div>
         <div>
           <Card>
@@ -121,10 +132,14 @@ function RouteComponent() {
                 }
               </div>
             </CardContent>
-            <CardFooter>
+            <CardFooter className='flex-col gap-2'>
               <Link className='w-full' to='/donation/donate/$donationId' params={{ donationId: campaignId}}>
                 <Button className="w-full">Donate Now</Button>
               </Link>
+              <Button onClick={() => setCopyLink(true)} className='w-full items-center' variant={'outline'}>
+                Copy Link
+                {copyLink ? <Check className='ml-1' /> : <Clipboard className='ml-2' />}
+              </Button>
             </CardFooter>
           </Card>
           <Card className="mt-6">
