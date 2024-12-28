@@ -10,6 +10,8 @@ import { PaymentModule } from './payment/payment.module';
 import { DonationModule } from './donation/donation.module';
 import { UpdateModule } from './update/update.module';
 import { UserModule } from './user/user.module';
+import { InboxModule } from './inbox/inbox.module';
+import { EmailSenderModule } from './email-sender/email-sender.module';
 
 @Module({
   imports: [
@@ -22,6 +24,8 @@ import { UserModule } from './user/user.module';
     DonationModule,
     UpdateModule,
     UserModule,
+    InboxModule,
+    EmailSenderModule,
   ],
   controllers: [AppController],
   providers: [AppService],

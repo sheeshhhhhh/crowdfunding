@@ -1,10 +1,12 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { ConsoleLogger, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CampaignService } from 'src/campaign/campaign.service';
 import { RequestUser } from 'src/guards/user.decorator';
 import { PaymentService } from 'src/payment/payment.service';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { BillingInformation, DonationDto } from './dto/donation.dto';
+import { DonationDto } from './dto/donation.dto';
 import { enUS } from 'date-fns/locale';
+import { EmailSenderService } from 'src/email-sender/email-sender.service';
+import { InboxService } from 'src/inbox/inbox.service';
 
 @Injectable()
 export class DonationService {
@@ -12,6 +14,8 @@ export class DonationService {
     private readonly paymentService: PaymentService,
     private readonly campaignService: CampaignService,
     private readonly prisma: PrismaService,
+    private readonly emailSender: EmailSenderService,
+    private readonly inboxService: InboxService,
   ) {}
 
   // also include billing information
@@ -84,7 +88,32 @@ export class DonationService {
         postalCode: getPayment.attributes.metadata.postalCode,
         country: getPayment.attributes.metadata.country,
       },
+      include: {
+        post: true // for email image
+      }
     });
+
+    
+    // send email
+    await this.emailSender.sendEmail(
+      getPayment.attributes.metadata.email,
+      'Donation ',
+      `Thankyou for Donation! ${getPayment.attributes.metadata.firstName}`,
+       `
+        Thank you for your $${getPayment.attributes.amount / 100} donation! 
+        Your support is making a real difference and helps us continue our mission. 
+        We truly appreciate your contribution and commitment to creating positive change.
+      `,
+      donationData.post.headerImage
+    )
+    
+    // send notif to campaign owner
+    const createNotif = await this.inboxService.createNotification({
+      userId: donationData.post.userId,
+      title: 'New Donation',
+      message: `You have received a new donation of $${getPayment.attributes.amount / 100} from ${getPayment.attributes.metadata.firstName} ${getPayment.attributes.metadata.lastName}`,
+      type: 'PUSH',
+    })
 
     const updateCampaign = await this.prisma.campaignPost.update({
       where: {
@@ -160,11 +189,7 @@ export class DonationService {
         take,
       });
 
-      const hasNext =
-        (await this.prisma.donation.count({
-          where: { post: { userId: user.id } },
-        })) >
-        page * take;
+      const hasNext = (await this.prisma.donation.count({ where: { post: { userId: user.id } } })) > page * take;
 
       return {
         donations: donations,
