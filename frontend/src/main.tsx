@@ -7,6 +7,7 @@ import './index.css'
 // Import the generated route tree
 import { routeTree } from './routeTree.gen'
 import AuthContextProvider from './context/AuthContext'
+import SocketProvider from './context/SocketContext'
 
 // Create a new router instance
 const router = createRouter({ routeTree })
@@ -28,8 +29,10 @@ if (!rootElement.innerHTML) {
     <StrictMode>
       <QueryClientProvider client={queryClient}>
         <AuthContextProvider>
-          <RouterProvider router={router} />
-          <Toaster />
+          <SocketProvider>
+            <RouterProvider router={router} />
+            <Toaster />
+          </SocketProvider>
         </AuthContextProvider>
       </QueryClientProvider>
     </StrictMode>,

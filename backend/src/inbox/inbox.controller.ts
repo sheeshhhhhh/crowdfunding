@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Patch, Query, UseGuards } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Patch, Query, UseGuards } from '@nestjs/common';
 import { InboxService } from './inbox.service';
 import { RequestUser, User } from 'src/guards/user.decorator';
 import { JwtAuthGuard } from 'src/guards/jwt.authguard';
@@ -16,12 +16,17 @@ export class InboxController {
     }
 
     @Get('notifications')
-    async getNotifications(@User() user: RequestUser, @Query() query: { page: string, isRead: string }) {
+    async getNotifications(@User() user: RequestUser, @Query() query: { page: string, isUnRead: string }) {
         return this.inboxService.getNotifications(user, query);
     }
 
     @Get(':id')
     async getNotificationById(@Param('id') id: string) {
         return this.inboxService.getNotificationById(id);
+    }
+
+    @Delete(':id')
+    async deleteNotification(@Param('id') id: string) {
+        return this.inboxService.deleteNotification(id);
     }
 }

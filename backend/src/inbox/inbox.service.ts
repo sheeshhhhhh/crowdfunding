@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateNotificationDto } from './dto/inbox.dto';
 import { RequestUser } from 'src/guards/user.decorator';
 import { InboxGateway } from './inbox.gateway';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class InboxService {
@@ -34,27 +35,35 @@ export class InboxService {
     }
 
     async markAsRead(id: string) {
-        const notification = await this.prisma.notification.update({
-            where: {
-                id: id
-            },
-            data: {
-                isRead: true
+        try {
+            const notification = await this.prisma.notification.update({
+                where: {
+                    id: id
+                },
+                data: {
+                    isRead: true
+                }
+            })
+    
+            return notification
+        } catch (error) {
+            if(error instanceof Prisma.PrismaClientKnownRequestError) {
+                if(error.code === 'P2025') {
+                    throw new NotFoundException('Notification not found')
+                }
             }
-        })
-
-        return notification
+            throw new InternalServerErrorException('An error occurred')
+        }
     }
 
 
-    async getNotifications(user: RequestUser, query: { page: string, isRead: string }) {
-        const take = 10;
+    async getNotifications(user: RequestUser, query: { page: string, isUnRead: string }) {
+        const take = 15;
         const skip = (parseInt(query.page) - 1) * take;
 
         const notification = await this.prisma.notification.findMany({
             where: {
                 userId: user.id,
-                isRead: query.isRead === 'true' ? true : false
             },
             take: take,
             skip: skip,
@@ -73,5 +82,24 @@ export class InboxService {
         })
 
         return notification
+    }
+
+    async deleteNotification(id: string) {
+        try {
+            const notification = await this.prisma.notification.delete({
+                where: {
+                    id: id
+                }
+            })
+    
+            return notification
+        } catch (error) {
+            if(error instanceof Prisma.PrismaClientKnownRequestError) {
+                if(error.code === 'P2025') {
+                    throw new NotFoundException('Notification not found')
+                }
+            }
+            throw new InternalServerErrorException('An error occurred')
+        }
     }
 }

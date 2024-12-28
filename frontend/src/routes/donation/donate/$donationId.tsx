@@ -1,6 +1,6 @@
 import LoadingSpinner from '@/components/common/LoadingSpinner'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
@@ -21,7 +21,6 @@ function RouteComponent() {
     const [isLoading, setIsLoading] = useState(false)
     const [paymentMethod , setPaymentMethod] = useState<string>();
     const [amount, setAmount] = useState<number>();
-    const [message, setMessage] = useState<string>('');
     const [billingInfo, setBillingInfo] = useState({
         firstName: '',
         lastName: '',
@@ -36,7 +35,7 @@ function RouteComponent() {
     
     useEffect(() => {
         const getBillingInformation = async () => {
-            const response = await axiosFetch.get('user/billingInformation')
+            const response = await axiosFetch.get('user/getBillingInfo')
             setBillingInfo(response.data)
         }
 
@@ -66,6 +65,7 @@ function RouteComponent() {
     }
 
     const handleDonation = async (e: React.FormEvent<HTMLFormElement>) => {
+        setIsLoading(true)
         try {
             e.preventDefault()
 
@@ -82,6 +82,8 @@ function RouteComponent() {
             }
         } catch (error) {
             toast.error('An error occurred while processing your donation')
+        } finally {
+            setIsLoading(false)
         }
     }
 
@@ -194,7 +196,9 @@ function RouteComponent() {
                         </div>
                     </CardContent>
                 </Card>
-                <Button type="submit" className="w-full mt-3">Donate</Button>
+                <Button disabled={isLoading} type="submit" className="w-full mt-3">
+                    {isLoading ? <LoadingSpinner /> : "Donate"}
+                </Button>
             </form>
             </div>
             <div>
