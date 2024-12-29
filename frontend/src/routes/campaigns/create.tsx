@@ -5,9 +5,14 @@ import { createFileRoute } from '@tanstack/react-router'
 import { toFormData } from 'axios'
 import toast from 'react-hot-toast'
 import { useNavigate } from '@tanstack/react-router'
+import ProtectedRoute from '@/components/common/ProtectedRoute'
 
 export const Route = createFileRoute('/campaigns/create')({
-  component: RouteComponent,
+  component: () => (
+    <ProtectedRoute>
+        <RouteComponent />
+    </ProtectedRoute>
+  ),
 })
 
 

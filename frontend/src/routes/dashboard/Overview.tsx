@@ -1,23 +1,26 @@
-import LoadingSpinner from '@/components/common/LoadingSpinner'
+import NavBar from '@/components/common/NavBar'
+import ProtectedRoute from '@/components/common/ProtectedRoute'
 import DashboardSidebar from '@/components/pageComponents/dashboard/DashboardSidebar'
 import Overview from '@/components/pageComponents/dashboard/Overview'
 import axiosFetch from '@/lib/axios'
 import { DonationOverview } from '@/types/donations'
 import { useQuery } from '@tanstack/react-query'
-import { createFileRoute, Navigate } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import toast from 'react-hot-toast'
 
 export const Route = createFileRoute('/dashboard/Overview')({
   component: () => (
-    <div className='flex h-screen overflow-hidden'>
+    <ProtectedRoute>
+      <div className='flex h-screen overflow-hidden'>
         <DashboardSidebar />
         <div className='flex-1 overflow-auto'>
-            {/* <DashboardHeader /> */}
+            <NavBar />
             <main className='flex-1 p-6'>
                 <RouteComponent />
             </main>
         </div>
-    </div>
+      </div>
+    </ProtectedRoute>
   ),
 })
 

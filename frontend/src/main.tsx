@@ -4,6 +4,7 @@ import { RouterProvider, createRouter } from '@tanstack/react-router'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Toaster } from 'react-hot-toast'
 import './index.css'
+
 // Import the generated route tree
 import { routeTree } from './routeTree.gen'
 import AuthContextProvider from './context/AuthContext'

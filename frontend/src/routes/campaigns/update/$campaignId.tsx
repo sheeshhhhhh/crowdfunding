@@ -1,4 +1,5 @@
 import LoadingSpinner from '@/components/common/LoadingSpinner'
+import ProtectedRoute from '@/components/common/ProtectedRoute'
 import CampaignForm, { dataStateType, initialDataType } from '@/components/pageComponents/dashboard/campaign/CampaignForm'
 import { CardDescription, CardTitle } from '@/components/ui/card'
 import axiosFetch from '@/lib/axios'
@@ -8,7 +9,11 @@ import { toFormData } from 'axios'
 import toast from 'react-hot-toast'
 
 export const Route = createFileRoute('/campaigns/update/$campaignId')({
-    component: RouteComponent,
+    component: () => (
+      <ProtectedRoute>
+        <RouteComponent />
+      </ProtectedRoute>
+    ),
 })
 
 function RouteComponent() {

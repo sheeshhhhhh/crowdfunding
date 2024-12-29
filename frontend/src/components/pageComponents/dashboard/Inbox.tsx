@@ -158,10 +158,10 @@ const NotificationOptions = ({
             </PopoverTrigger>
             <PopoverContent align="end" className="flex flex-col space-y-2">
                 <Button disabled={isLoadingMarkAsRead} onClick={() => MarkAsRead()}>
-                    {isLoadingMarkAsRead ? <LoadingSpinner /> : <div><MailOpen /> Mark as read</div>}
+                    {isLoadingMarkAsRead ? <LoadingSpinner /> : <div className="flex items-center gap-2"><MailOpen /> Mark as read</div>}
                 </Button>
                 <Button disabled={isLoadingDelete} variant="destructive" onClick={() => DeleteNotification()}>
-                    {isLoadingDelete ? <LoadingSpinner /> : <div><Trash2 /> Delete</div>}
+                    {isLoadingDelete ? <LoadingSpinner /> : <div className="flex items-center gap-2"><Trash2 /> Delete</div>}
                 </Button>
             </PopoverContent>
         </Popover>

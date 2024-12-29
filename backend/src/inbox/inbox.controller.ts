@@ -16,7 +16,7 @@ export class InboxController {
     }
 
     @Get('notifications')
-    async getNotifications(@User() user: RequestUser, @Query() query: { page: string, isUnRead: string }) {
+    async getNotifications(@User() user: RequestUser, @Query() query: { page: string }) {
         return this.inboxService.getNotifications(user, query);
     }
 

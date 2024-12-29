@@ -1,3 +1,4 @@
+import ProtectedRoute from '@/components/common/ProtectedRoute'
 import DashboardSidebar from '@/components/pageComponents/dashboard/DashboardSidebar'
 import Donations, { DonationStastistics } from '@/components/pageComponents/dashboard/Donations'
 import axiosFetch from '@/lib/axios'
@@ -7,15 +8,17 @@ import { createFileRoute, useSearch } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/dashboard/Donations')({
     component: () => (
-        <div className='flex h-screen overflow-hidden'>
-            <DashboardSidebar />
-            <div className='flex-1 overflow-auto'>
-                {/* <DashboardHeader /> */}
-                <main className='flex-1 p-6'>
-                    <RouteComponent />
-                </main>
+        <ProtectedRoute>
+            <div className='flex h-screen overflow-hidden'>
+                <DashboardSidebar />
+                <div className='flex-1 overflow-auto'>
+                    {/* <DashboardHeader /> */}
+                    <main className='flex-1 p-6'>
+                        <RouteComponent />
+                    </main>
+                </div>
             </div>
-        </div>
+        </ProtectedRoute>
     ),
     validateSearch: (search: Record<string, string>) => {
         return {

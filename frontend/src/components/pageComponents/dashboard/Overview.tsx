@@ -5,6 +5,7 @@ import { CreditCard, Layers, User } from "lucide-react"
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts"
 import LoadingSpinner from "@/components/common/LoadingSpinner"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 const donationData = [
   { name: 'Jan', amount: 4000 },
@@ -138,24 +139,26 @@ const Overview = ({
                         You have received 12 donations this month.
                     </CardDescription>
                 </CardHeader>
-                <CardContent>
-                    <div className="space-y-8">
-                        {data.recentDonations.map((donation, index) => (
-                            <div key={index} className="flex items-center">
-                            <Avatar className="h-9 w-9">
-                                <AvatarImage src={donation.user?.profile} alt="Avatar" />
-                                <AvatarFallback>{donation.user?.username[0] || 'A'}</AvatarFallback>
-                            </Avatar>
-                            <div className="ml-4 space-y-1">
-                                <p className="text-sm font-medium leading-none">{donation.user?.username || 'Anonymous'}</p>
-                                <p className="text-sm text-muted-foreground">
-                                {donation.user?.email || 'No Email'}
-                                </p>
-                            </div>
-                            <div className="ml-auto font-medium">${donation.amount}</div>
-                            </div>
-                        ))}
-                    </div>
+                <CardContent className="p-0">
+                    <ScrollArea className="h-[490px] px-[24px] pb-[12px]">
+                        <div className="space-y-8">
+                            {data.recentDonations.map((donation, index) => (
+                                <div key={index} className="flex items-center">
+                                <Avatar className="h-9 w-9">
+                                    <AvatarImage src={donation.user?.profile} alt="Avatar" />
+                                    <AvatarFallback>{donation.user?.username[0] || 'A'}</AvatarFallback>
+                                </Avatar>
+                                <div className="ml-4 space-y-1">
+                                    <p className="text-sm font-medium leading-none">{donation.user?.username || 'Anonymous'}</p>
+                                    <p className="text-sm text-muted-foreground">
+                                    {donation.user?.email || 'No Email'}
+                                    </p>
+                                </div>
+                                <div className="ml-auto font-medium">${donation.amount}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </ScrollArea>
                 </CardContent>
                 </Card>
             </div>

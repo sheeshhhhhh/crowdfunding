@@ -1,4 +1,5 @@
 import LoadingSpinner from '@/components/common/LoadingSpinner'
+import ProtectedRoute from '@/components/common/ProtectedRoute'
 import BillingInformation from '@/components/pageComponents/settings/BillingInformation'
 import ChangePassword from '@/components/pageComponents/settings/ChangePassword'
 import UserProfile from '@/components/pageComponents/settings/UserProfile'
@@ -8,12 +9,16 @@ import { createFileRoute } from '@tanstack/react-router'
 import toast from 'react-hot-toast'
 
 export const Route = createFileRoute('/settings/')({
-  component: RouteComponent,
+  component: () => (
+    <ProtectedRoute>
+      <RouteComponent />
+    </ProtectedRoute>
+  ),
 })
 
 function RouteComponent() {
   // request all the initial data for the settings page here
-  const { data: initialData, isLoading, isError, error } = useQuery({
+  const { data: initialData, isLoading, isError } = useQuery({
     queryKey: ['getInitialData'],
     queryFn: async () => {
       const response = await axiosFetch.get('/user/getInitialData')

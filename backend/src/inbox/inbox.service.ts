@@ -57,7 +57,7 @@ export class InboxService {
     }
 
 
-    async getNotifications(user: RequestUser, query: { page: string, isUnRead: string }) {
+    async getNotifications(user: RequestUser, query: { page: string }) {
         const take = 15;
         const skip = (parseInt(query.page) - 1) * take;
 
