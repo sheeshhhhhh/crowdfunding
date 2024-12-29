@@ -40,7 +40,7 @@ export class DonationController {
   @UseGuards(JwtAuthGuard)
   @Get('Statistics')
   async getDonationStatistics(@User() user: RequestUser) {
-    return this.donationService.getDonationStatistics(user);
+    return this.donationService.getDonationStatistics(user.id);
   }
 
   @UseGuards(JwtAuthGuard)

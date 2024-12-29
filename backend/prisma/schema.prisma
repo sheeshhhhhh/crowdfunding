@@ -20,6 +20,9 @@ model User {
   profile   String?
   password  String?
 
+  bio       String?
+  location   String?
+
   crodfundPosts CampaignPost[]
   donations    Donation[]
   billingInfo BillingInformation?

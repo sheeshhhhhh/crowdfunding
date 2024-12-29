@@ -3,8 +3,8 @@ import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
 import { useEffect } from 'react'
 
 type RedirectTokenSearchParams = {
-    access_token: string,
-    refresh_token: string
+    access_token?: string,
+    refresh_token?: string
 }
 
 export const Route = createFileRoute('/redirecttoken/')({
@@ -22,7 +22,6 @@ function RouteComponent() {
     const navigate = useNavigate({ from: '/redirecttoken' })
 
     useEffect(() => {
-
         if (!search.access_token || !search.refresh_token) {
             navigate({ to: '/login' })
             return
@@ -30,7 +29,8 @@ function RouteComponent() {
         localStorage.setItem('access_token', search.access_token)
         localStorage.setItem('refresh_token', search.refresh_token)
     
-        navigate({ to: '/', reloadDocument: true })
+        const next = sessionStorage.getItem('next')
+        navigate({ to: next || '/', reloadDocument: true })
     }, [])
 
     return (    

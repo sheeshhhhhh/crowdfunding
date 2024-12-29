@@ -71,7 +71,7 @@ const NavBar = () => {
                         <nav className="flex flex-col gap-3 px-4 mt-9 font-semibold text-lg">
                             <div className="flex justify-start gap-3">
                                 <UserRound />
-                                <Link to="/campaigns/create">
+                                <Link to='/profile/$userId' params={{ userId: user.id }}>
                                     Profile
                                 </Link>
                             </div>

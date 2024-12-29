@@ -2,6 +2,7 @@ import {
     Body,
   Controller,
   Get,
+  Param,
   Patch,
   UploadedFile,
   UseGuards,
@@ -17,6 +18,7 @@ import {
 } from './dto/user.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import * as multer from 'multer';
+import { IsPublic } from 'src/guards/IsPublic.decorator';
 
 @UseGuards(JwtAuthGuard)
 @Controller('user')
@@ -26,6 +28,12 @@ export class UserController {
     @Get('getInitialData')
     async getInitialData(@User() user: RequestUser) {
         return this.userService.getInitialData(user);
+    }
+
+    @IsPublic()
+    @Get('getProfile/:userId')
+    async getProfile(@Param('userId') userId: string) {
+        return this.userService.getProfile(userId);
     }
 
     @Get('getBillingInfo')

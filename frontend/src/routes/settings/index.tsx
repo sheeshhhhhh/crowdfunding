@@ -44,7 +44,8 @@ function RouteComponent() {
     <div className='container mx-auto px-4 py-8 max-w-4xl'>
       <h1 className='text-3xl font-bold mb-6'>Account Settings</h1>
       <div className='space-y-6'>
-        <UserProfile initialEmail={initialData.email} initialImage={initialData.profile} initialUsername={initialData.username} />
+        <UserProfile initialBio={initialData.bio} initialLocation={initialData.location}
+        initialEmail={initialData.email} initialImage={initialData.profile} initialUsername={initialData.username} />
         <ChangePassword />
         <BillingInformation initialData={initialData.billingInfo} />
       </div>

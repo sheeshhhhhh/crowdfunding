@@ -9,6 +9,7 @@ import { InboxModule } from 'src/inbox/inbox.module';
 @Module({
   providers: [DonationService],
   controllers: [DonationController],
+  exports: [DonationService],
   imports: [PaymentModule, CampaignModule, EmailSenderModule, InboxModule],
 })
 export class DonationModule {}

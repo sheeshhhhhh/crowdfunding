@@ -200,10 +200,10 @@ export class DonationService {
     }
   }
 
-  async getDonationStatistics(user: RequestUser) {
+  async getDonationStatistics(userId: string) {
     const totalDonations = await this.prisma.donation.aggregate({
       where: {
-        userId: user.id,
+        userId: userId,
       },
       _sum: {
         amount: true,
@@ -212,7 +212,7 @@ export class DonationService {
 
     const averageDonation = await this.prisma.donation.aggregate({
       where: {
-        userId: user.id,
+        userId: userId,
       },
       _avg: {
         amount: true,
@@ -221,7 +221,7 @@ export class DonationService {
 
     const totalDonors = await this.prisma.donation.count({
       where: {
-        userId: user.id,
+        userId: userId,
       },
     });
 
@@ -285,7 +285,7 @@ export class DonationService {
   async getOverview(user: RequestUser) {
     const userId = user.id;
     const { totalDonations, averageDonation, totalDonors } =
-      await this.getDonationStatistics(user);
+      await this.getDonationStatistics(user.id);
     const recentDonations = await this.getRecentDonations(user);
     const monthlyDonationsStats = await this.getMonthlyDonations(user);
 

@@ -27,6 +27,19 @@ export type CampaignPost = {
     endDate?: string
 }
 
+export type campaignProfile = {
+    id: string,
+    title: string,
+    userId: string,
+    headerImage: string,
+    status: CampaignStatus,
+    goal: number,
+    current: number,
+    totalDonors: number,
+    createdAt: string,
+    endDate?: string,
+}
+
 export type CampaignPostWithUpdates = CampaignPost & {
     updates: Update[]
 }

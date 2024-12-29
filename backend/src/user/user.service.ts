@@ -13,13 +13,47 @@ import {
 } from './dto/user.dto';
 import * as bcrypt from 'bcrypt';
 import { FileUploadService } from 'src/file-upload/file-upload.service';
+import { DonationService } from 'src/donation/donation.service';
 
 @Injectable()
 export class UserService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly fileUpload: FileUploadService,
+    private readonly donationService: DonationService,
   ) {}
+
+    async getProfile(userId: string) {
+        const profile = await this.prisma.user.findFirst({
+            where: {
+                id: userId,
+            },
+            select: {
+                id: true,
+                username: true,
+                profile: true,
+                email: true,
+                location: true,
+                bio: true,
+                crodfundPosts: true 
+            }
+        })
+
+        if(!profile) {
+            throw new NotFoundException('User not found')
+        }
+
+        const stats = await this.donationService.getDonationStatistics(userId)
+
+        return {
+            ...profile,
+            stats: {
+                raised: stats.totalDonations,
+                donors: stats.totalDonors,
+                campaigns: profile.crodfundPosts.length
+            }
+        }
+    }
 
     async getInitialData(user: RequestUser) {
         try {
@@ -33,6 +67,8 @@ export class UserService {
                     username: true,
                     email: true,
                     profile: true,
+                    location: true,
+                    bio: true,
                 },
             });
 
@@ -113,7 +149,7 @@ export class UserService {
     async updateUserProfile(
         user: RequestUser,
         profile: Express.Multer.File,
-        { username, email }: UpdateUserProfileDto,
+        { username, email, bio, location }: UpdateUserProfileDto,
     ) {
         let profileUrl = undefined;
         if (profile) {
@@ -129,6 +165,8 @@ export class UserService {
             data: {
                 username,
                 email,
+                bio,
+                location,
                 ...(profileUrl && { profile: profileUrl.secure_url }),
             },
         });

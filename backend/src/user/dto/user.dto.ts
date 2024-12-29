@@ -40,4 +40,10 @@ export class UpdateUserProfileDto {
 
   @IsString()
   email: string;
+
+  @IsString()
+  location: string;
+
+  @IsString()
+  bio: string;
 }

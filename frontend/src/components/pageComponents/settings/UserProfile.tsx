@@ -8,33 +8,40 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useAuthContext } from "@/context/AuthContext"
 import { File } from "lucide-react"
 import toast from "react-hot-toast"
-import { toFormData } from "axios"
 import axiosFetch from "@/lib/axios"
-
+import { Textarea } from "@/components/ui/textarea"
 
 type UserProfileStateType = {
   profile: File[],
-  email: string
-  username: string
+  email: string,
+  username: string,
+  bio: string,
+  location: string
 }
 
 type UserProfileProps = {
   initialImage: string,
   initialEmail: string,
-  initialUsername: string
+  initialUsername: string,
+  initialBio: string,
+  initialLocation: string,
 }
 
 const UserProfile = ({
   initialImage,
   initialEmail,
-  initialUsername
+  initialUsername,
+  initialBio,
+  initialLocation
 }: UserProfileProps) => {
   const { user } = useAuthContext()
   const [preview, setPreview] = useState<string | null>(initialImage || null)
   const { register, handleSubmit, formState: { errors } } = useForm<UserProfileStateType>({
     defaultValues: {
       email: initialEmail,
-      username: initialUsername
+      username: initialUsername,
+      bio: initialBio,
+      location: initialLocation
     }
   })
 
@@ -51,11 +58,12 @@ const UserProfile = ({
 
   const onSubmit: SubmitHandler<UserProfileStateType> = async (data) => {
     try {
-      console.log(data.profile?.[0])
       const formData = new FormData();
       formData.append("profile", data.profile?.[0]);
       formData.append("email", data.email);
       formData.append("username", data.username);
+      formData.append("bio", data.bio);
+      formData.append("location", data.location);
 
       const response = await axiosFetch.patch('/user/updateUserProfile', formData, {
         headers: {
@@ -136,6 +144,20 @@ const UserProfile = ({
                 })} id="username" type="text" placeholder="username" />
                 {errors.username && <p className="text-red-500 text-sm ml-3">{errors.username.message}</p>}
               </div>
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="location">Location</Label>
+            <div>
+              <Input {...register('location')} id="location" type="text" placeholder="Location" />
+              {errors.location && <p className="text-red-500 text-sm ml-3">{errors.location.message}</p>}
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="bio">Bio</Label>
+            <div>
+              <Textarea {...register('bio')} id="bio" placeholder="Tell us about yourself" />
+              {errors.bio && <p className="text-red-500 text-sm ml-3">{errors.bio.message}</p>}
             </div>
           </div>
           <Button type="submit" className="w-full sm:w-auto">Update Profile</Button>

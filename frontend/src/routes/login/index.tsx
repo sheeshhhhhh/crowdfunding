@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { Eye, EyeOff } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -13,6 +13,11 @@ import facebookIcon from '../../../public/facebook.svg'
 
 export const Route = createFileRoute('/login/')({
   component: RouteComponent,
+  validateSearch: (search: Record<string, string>): { next?: string } => {
+    return {
+      next: search?.next ?? ''
+    }
+  }
 })
 
 type LoginStateType = {
@@ -21,10 +26,15 @@ type LoginStateType = {
 }
 
 function RouteComponent() {
+  const { next } = Route.useSearch()
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const { register, setError,  handleSubmit, formState: { errors } } = useForm<LoginStateType>()
   const navigate = useNavigate()
+
+  useEffect(() => {
+    sessionStorage.removeItem('next') // clearing the next everytime the component is mounted
+  }, [])
 
   const onSubmit: SubmitHandler<LoginStateType> = async (data) => {
     setIsLoading(true)
@@ -34,7 +44,7 @@ function RouteComponent() {
       localStorage.setItem('access_token', response.data.access_token);
       localStorage.setItem('refresh_token', response.data.refresh_token);
       
-      navigate({ to: '/', reloadDocument: true })
+      navigate({ to: next ? next : '/', reloadDocument: true })
     } catch (e: any) {
       if (e.response?.status === 400) {
         setError(e.response.data.name, {
@@ -45,6 +55,15 @@ function RouteComponent() {
     } finally {
       setIsLoading(false)
     }
+  }
+
+  const OAuthLogin = async (url: string, next: string) => {
+    // save to session storage
+    if(next) {
+      sessionStorage.setItem('next', next)
+    }
+    // redirect to OAuth login
+    window.location.href = url
   }
 
   return (
@@ -93,10 +112,12 @@ function RouteComponent() {
                 or
               </div>
             </div>
-            <Button type='button' className='w-full justify-start pl-40' variant='secondary' onClick={() => window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/google-login`}>
+            <Button type='button' className='w-full justify-start pl-40' variant='secondary' 
+            onClick={() => OAuthLogin(`${import.meta.env.VITE_BACKEND_URL}/auth/google-login`, next ? next : '/')}>
               <img src={googleIcon} className='w-5 h-5' /> Google
             </Button>
-            <Button type='button' className='w-full justify-start pl-40 mt-3' variant='secondary' onClick={() => window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/facebook-login`}>
+            <Button type='button' className='w-full justify-start pl-40 mt-3' variant='secondary' 
+            onClick={() => OAuthLogin(`${import.meta.env.VITE_BACKEND_URL}/auth/facebook-login`, next ? next : '/')}>
               <img src={facebookIcon} className='w-5 h-5' /> Facebook
             </Button>
           </CardFooter>

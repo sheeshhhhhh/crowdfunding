@@ -138,7 +138,7 @@ function RouteComponent() {
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {campaigns?.map((campaign) => (
-            <Link to={`/campaigns/${campaign.id}`} key={campaign.id}>
+            <Link reloadDocument to={`/campaigns/${campaign.id}`} key={campaign.id}>
               <Card key={campaign.id} className="flex flex-col ">
                 <img src={campaign.headerImage} alt={campaign.title} className="h-48 w-full object-cover rounded-t-lg" />
                 <CardHeader>
