@@ -11,12 +11,11 @@ import toast from 'react-hot-toast'
 export const Route = createFileRoute('/dashboard/Overview')({
   component: () => (
     <ProtectedRoute>
-      <div className='flex h-screen overflow-hidden'>
+      <div className='flex overflow-hidden'>  
         <DashboardSidebar />
         <div className='flex-1 overflow-auto'>
-            <NavBar />
-            <main className='flex-1 p-6'>
-                <RouteComponent />
+            <main className='p-2 px-5'>
+              <RouteComponent />
             </main>
         </div>
       </div>

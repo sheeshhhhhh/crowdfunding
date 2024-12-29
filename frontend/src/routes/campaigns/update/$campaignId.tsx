@@ -45,7 +45,7 @@ function RouteComponent() {
   }
 
   return (
-    <div className="min-h-screen pt-10">
+    <div className="height-withNav pt-10">
       <header className="flex items-center"></header>
       <div className="max-w-[800px] mx-auto">
         <CardTitle className="">Update Campaign</CardTitle>

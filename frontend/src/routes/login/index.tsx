@@ -1,15 +1,15 @@
-import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card'
+import LoadingSpinner from '@/components/common/LoadingSpinner'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import axiosFetch from '@/lib/axios'
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
+import { Eye, EyeOff } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { Eye, EyeOff } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import axiosFetch from '@/lib/axios'
-import LoadingSpinner from '@/components/common/LoadingSpinner'
-import googleIcon from '../../../public/google.svg'
 import facebookIcon from '../../../public/facebook.svg'
+import googleIcon from '../../../public/google.svg'
 
 export const Route = createFileRoute('/login/')({
   component: RouteComponent,
@@ -67,7 +67,7 @@ function RouteComponent() {
   }
 
   return (
-    <div className='min-h-screen w-full flex justify-center items-center'>
+    <div className='height-withNav w-full flex justify-center items-center'>
       <Card className='min-w-[450px]'>
         <form onSubmit={handleSubmit(onSubmit)}>
           

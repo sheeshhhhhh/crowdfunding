@@ -57,7 +57,7 @@ function RouteComponent() {
     }, [])
 
     return (
-        <div className='min-h-screen flex flex-col gap-4 justify-center items-center'>
+        <div className='height-withNav flex flex-col gap-4 justify-center items-center'>
             <div>
                 {
                     isLoading

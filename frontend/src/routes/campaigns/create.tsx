@@ -1,11 +1,10 @@
+import ProtectedRoute from '@/components/common/ProtectedRoute'
 import CampaignForm, { dataStateType } from '@/components/pageComponents/dashboard/campaign/CampaignForm'
 import { CardDescription, CardTitle } from '@/components/ui/card'
 import axiosFetch from '@/lib/axios'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { toFormData } from 'axios'
 import toast from 'react-hot-toast'
-import { useNavigate } from '@tanstack/react-router'
-import ProtectedRoute from '@/components/common/ProtectedRoute'
 
 export const Route = createFileRoute('/campaigns/create')({
   component: () => (
@@ -35,7 +34,7 @@ function RouteComponent() {
     }
 
     return (
-        <div className='min-h-screen pt-10'>
+        <div className='height-withNav pt-10'>
             <header className='flex items-center'>
             </header>
             <div className='max-w-[800px] mx-auto'>

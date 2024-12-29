@@ -55,7 +55,7 @@ function RouteComponent() {
   }
 
   return (
-    <div className='min-h-screen w-full flex justify-center items-center'>
+    <div className='height-withNav w-full flex justify-center items-center'>
       <Card className='min-w-[450px]'>
         <form onSubmit={handleSubmit(onSubmit)}>
 

@@ -67,6 +67,10 @@
     scroll-behavior: smooth;
   }
 
+  .height-withNav {
+    @apply min-h-[859px]
+  }
+
   /* check mark animation */
   #check-group {
     animation: 0.32s ease-in-out 1.03s check-group;

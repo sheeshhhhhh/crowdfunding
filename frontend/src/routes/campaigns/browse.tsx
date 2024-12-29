@@ -15,9 +15,9 @@ import { Filter, Search, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 type searchParams = {
-  page: number,
-  search: string,
-  filter: string // categories
+  page?: number,
+  search?: string,
+  filter?: string // categories
 }
 
 export const Route = createFileRoute('/campaigns/browse')({

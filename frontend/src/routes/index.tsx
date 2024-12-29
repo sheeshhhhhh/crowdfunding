@@ -50,50 +50,7 @@ function Index() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <header className="bg-white shadow-sm border-b">
-        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex">
-              <Link href="/" className="flex-shrink-0 flex items-center">
-                <span className="ml-2 text-xl font-bold text-gray-900">CrowdFund</span>
-              </Link>
-              <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-                {['Home', 'About', 'How-It-Works', 'Browse Donations'].map((item) => (
-                  <Link
-                    key={item}
-                    href={item === 'Browse Donations' ? '/browse' : `#${item}`}
-                    className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                  >
-                    {item}
-                  </Link>
-                ))}
-              </div>
-            </div>
-            <div className="hidden sm:ml-6 sm:flex sm:items-center">
-              {isLoggedIn() ? (
-                <div className='space-x-4'>
-                  <Link href="/dashboard/overview">
-                    <Button>Dashboard</Button>
-                  </Link>
-                  <Button onClick={() => handleLogout()} variant="outline">
-                    Log out
-                  </Button>
-                </div>
-              ) : (
-                <div className="space-x-4">
-                  <Link href="/login">
-                    <Button variant="outline">Log in</Button>
-                  </Link>
-                  <Link href="/signup">
-                    <Button>Sign up</Button>
-                  </Link>
-                </div>
-              )}
-            </div>
-          </div>
-        </nav>
-      </header>
+    <div className="flex flex-col height-withNav">
 
       <main className="flex-grow">
         <section id="Home" className="relative bg-gray-50 overflow-hidden flex items-center">

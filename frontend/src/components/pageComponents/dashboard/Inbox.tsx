@@ -54,7 +54,7 @@ const Inbox = () => {
                 <div
                     ref={scrollRef}
                     onScroll={handleScroll}
-                    className="h-[750px] pr-4 overflow-y-auto
+                    className="h-[715px] pr-4 overflow-y-auto
                         [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-100
                         [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded-full"
                 >

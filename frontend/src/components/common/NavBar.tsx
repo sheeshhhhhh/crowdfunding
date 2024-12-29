@@ -9,7 +9,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 
 const NavBar = () => {
     const [isOpenSheet, setIsOpenSheet] = useState(false)
-    const { user } = useAuthContext()
+    const { user, isLoggedIn } = useAuthContext()
 
     const Logout = () => {
         localStorage.removeItem('access_token')
@@ -17,14 +17,31 @@ const NavBar = () => {
         window.location.reload() // just reaload the page
     }
 
-    // add popovers for notifications
-
     return (
-        <header className="flex justify-end px-4 sm:px-8 md:px-14 h-14 lg:h-[60px] items-center gap-4 border-b bg-gray-100/40 dark:bg-gray-800/40">
-            {/* <div>
-                {children}
-            </div> */}
-            <div className="flex items-center gap-4">
+        <header className="flex justify-between px-4 sm:px-8 md:px-14 h-14 lg:h-[60px] items-center gap-4 border-b bg-gray-100/40 dark:bg-gray-800/40">
+            <div className="flex h-[60px] items-center border-b px-6 gap-4">
+                <Link className="flex items-center gap-2 font-semibold" href="/">
+                    <Layers className="h-6 w-6" />
+                    <span className="">CrowdFund</span>
+                </Link>
+                <Link to="/campaigns/browse">
+                    <Button variant="outline">
+                        Browse
+                    </Button>
+                </Link>
+            </div>
+
+            {!isLoggedIn() && (
+                <div className="space-x-4">
+                  <Link href="/login">
+                    <Button variant="outline">Log in</Button>
+                  </Link>
+                  <Link href="/signup">
+                    <Button>Sign up</Button>
+                  </Link>
+                </div>
+            )}
+            {isLoggedIn() && <div className="flex items-center gap-4">
                 <Popover>
                     <PopoverTrigger>
                         <Button className="rounded-full" size="icon" variant="ghost">
@@ -96,7 +113,7 @@ const NavBar = () => {
                         </nav>
                     </SheetContent>
                 </Sheet>
-            </div>
+            </div>}
         </header>
     )
 }
