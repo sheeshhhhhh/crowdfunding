@@ -16,7 +16,7 @@ export const Route = createFileRoute('/dashboard/Inbox')({
             </div>
         </div>
       </ProtectedRoute>
-      ),
+    ),
 })
 
 function RouteComponent() {

@@ -49,7 +49,7 @@ const ProfileHeader = ({
                             </Button>
                         </Link>
                     :
-                        <Link>
+                        <Link to='/messages' search={{ userId: id }}>
                             {/* should redirect to message if we create messaging feature */}
                             <Button className="mt-2 sm:mt-0" variant="outline">
                                 <MessageCircleCode className="mr-2 h-4 w-4" />

@@ -1,8 +1,8 @@
 import {
     BadRequestException,
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
+    Injectable,
+    InternalServerErrorException,
+    NotFoundException,
 } from '@nestjs/common';
 import { RequestUser } from 'src/guards/user.decorator';
 import { PrismaService } from 'src/prisma/prisma.service';

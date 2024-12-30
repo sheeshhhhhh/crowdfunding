@@ -6,6 +6,6 @@ import { InboxGateway } from './inbox.gateway';
 @Module({
   providers: [InboxService, InboxGateway],
   controllers: [InboxController],
-  exports: [InboxService],
+  exports: [InboxService, InboxGateway],
 })
 export class InboxModule {}

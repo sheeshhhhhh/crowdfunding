@@ -12,6 +12,7 @@ import { UpdateModule } from './update/update.module';
 import { UserModule } from './user/user.module';
 import { InboxModule } from './inbox/inbox.module';
 import { EmailSenderModule } from './email-sender/email-sender.module';
+import { MessageModule } from './message/message.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { EmailSenderModule } from './email-sender/email-sender.module';
     UserModule,
     InboxModule,
     EmailSenderModule,
+    MessageModule,
   ],
   controllers: [AppController],
   providers: [AppService],

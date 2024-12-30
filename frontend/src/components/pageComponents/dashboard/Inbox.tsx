@@ -6,7 +6,7 @@ import axiosFetch from "@/lib/axios"
 import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { format } from "date-fns"
 import { MoreHorizontal, MailOpen, Trash2 } from "lucide-react"
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
 import toast from "react-hot-toast"
 

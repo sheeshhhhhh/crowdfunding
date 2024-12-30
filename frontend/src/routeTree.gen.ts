@@ -15,6 +15,7 @@ import { Route as IndexImport } from './routes/index'
 import { Route as SignupIndexImport } from './routes/signup/index'
 import { Route as SettingsIndexImport } from './routes/settings/index'
 import { Route as RedirecttokenIndexImport } from './routes/redirecttoken/index'
+import { Route as MessagesIndexImport } from './routes/messages/index'
 import { Route as LoginIndexImport } from './routes/login/index'
 import { Route as DashboardIndexImport } from './routes/dashboard/index'
 import { Route as ProfileUserIdImport } from './routes/profile/$userId'
@@ -53,6 +54,12 @@ const SettingsIndexRoute = SettingsIndexImport.update({
 const RedirecttokenIndexRoute = RedirecttokenIndexImport.update({
   id: '/redirecttoken/',
   path: '/redirecttoken/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const MessagesIndexRoute = MessagesIndexImport.update({
+  id: '/messages/',
+  path: '/messages/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -235,6 +242,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginIndexImport
       parentRoute: typeof rootRoute
     }
+    '/messages/': {
+      id: '/messages/'
+      path: '/messages'
+      fullPath: '/messages'
+      preLoaderRoute: typeof MessagesIndexImport
+      parentRoute: typeof rootRoute
+    }
     '/redirecttoken/': {
       id: '/redirecttoken/'
       path: '/redirecttoken'
@@ -289,6 +303,7 @@ export interface FileRoutesByFullPath {
   '/profile/$userId': typeof ProfileUserIdRoute
   '/dashboard': typeof DashboardIndexRoute
   '/login': typeof LoginIndexRoute
+  '/messages': typeof MessagesIndexRoute
   '/redirecttoken': typeof RedirecttokenIndexRoute
   '/settings': typeof SettingsIndexRoute
   '/signup': typeof SignupIndexRoute
@@ -310,6 +325,7 @@ export interface FileRoutesByTo {
   '/profile/$userId': typeof ProfileUserIdRoute
   '/dashboard': typeof DashboardIndexRoute
   '/login': typeof LoginIndexRoute
+  '/messages': typeof MessagesIndexRoute
   '/redirecttoken': typeof RedirecttokenIndexRoute
   '/settings': typeof SettingsIndexRoute
   '/signup': typeof SignupIndexRoute
@@ -332,6 +348,7 @@ export interface FileRoutesById {
   '/profile/$userId': typeof ProfileUserIdRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/login/': typeof LoginIndexRoute
+  '/messages/': typeof MessagesIndexRoute
   '/redirecttoken/': typeof RedirecttokenIndexRoute
   '/settings/': typeof SettingsIndexRoute
   '/signup/': typeof SignupIndexRoute
@@ -355,6 +372,7 @@ export interface FileRouteTypes {
     | '/profile/$userId'
     | '/dashboard'
     | '/login'
+    | '/messages'
     | '/redirecttoken'
     | '/settings'
     | '/signup'
@@ -375,6 +393,7 @@ export interface FileRouteTypes {
     | '/profile/$userId'
     | '/dashboard'
     | '/login'
+    | '/messages'
     | '/redirecttoken'
     | '/settings'
     | '/signup'
@@ -395,6 +414,7 @@ export interface FileRouteTypes {
     | '/profile/$userId'
     | '/dashboard/'
     | '/login/'
+    | '/messages/'
     | '/redirecttoken/'
     | '/settings/'
     | '/signup/'
@@ -417,6 +437,7 @@ export interface RootRouteChildren {
   ProfileUserIdRoute: typeof ProfileUserIdRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
   LoginIndexRoute: typeof LoginIndexRoute
+  MessagesIndexRoute: typeof MessagesIndexRoute
   RedirecttokenIndexRoute: typeof RedirecttokenIndexRoute
   SettingsIndexRoute: typeof SettingsIndexRoute
   SignupIndexRoute: typeof SignupIndexRoute
@@ -438,6 +459,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProfileUserIdRoute: ProfileUserIdRoute,
   DashboardIndexRoute: DashboardIndexRoute,
   LoginIndexRoute: LoginIndexRoute,
+  MessagesIndexRoute: MessagesIndexRoute,
   RedirecttokenIndexRoute: RedirecttokenIndexRoute,
   SettingsIndexRoute: SettingsIndexRoute,
   SignupIndexRoute: SignupIndexRoute,
@@ -468,6 +490,7 @@ export const routeTree = rootRoute
         "/profile/$userId",
         "/dashboard/",
         "/login/",
+        "/messages/",
         "/redirecttoken/",
         "/settings/",
         "/signup/",
@@ -513,6 +536,9 @@ export const routeTree = rootRoute
     },
     "/login/": {
       "filePath": "login/index.tsx"
+    },
+    "/messages/": {
+      "filePath": "messages/index.tsx"
     },
     "/redirecttoken/": {
       "filePath": "redirecttoken/index.tsx"
