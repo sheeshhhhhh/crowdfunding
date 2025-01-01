@@ -37,16 +37,19 @@ const SendMessage = () => {
             })
 
             if(response.data) {
+                // set conversation id when needed
                 if(!conversationId) {
                     navigate({ search: prev => ({ ...prev, conversationId: response.data.conversationId })})
                 }
 
                 setMessage('')
 
+                // update message
                 updateMessages(userId, response.data, queryClient)
 
                 queryClient.invalidateQueries(['pastConversations'])
                 if(!conversationId) {
+                    // request the message if it's a new conversation
                     queryClient.invalidateQueries(['getMessages', userId])
                 }
             }

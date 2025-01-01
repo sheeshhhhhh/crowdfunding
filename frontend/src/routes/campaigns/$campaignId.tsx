@@ -147,16 +147,18 @@ function RouteComponent() {
               <CardTitle>Campaign Creator</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center space-x-4">
-                <Avatar>
-                  <AvatarImage src={campaign.user.profile} />
-                  <AvatarFallback>{campaign.user.username[0]}</AvatarFallback>
-                </Avatar>
-                <div>
-                  <p className="font-medium">{campaign.user.username}</p>
-                  <p className="text-sm text-muted-foreground">Campaign Organizer</p>
+              <Link to='/profile/$userId' params={{ userId: campaign.userId }}>
+                <div className="flex items-center space-x-4">
+                  <Avatar>
+                    <AvatarImage src={campaign.user.profile} />
+                    <AvatarFallback>{campaign.user.username[0]}</AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p className="font-medium">{campaign.user.username}</p>
+                    <p className="text-sm text-muted-foreground">Campaign Organizer</p>
+                  </div>
                 </div>
-              </div>
+              </Link>
             </CardContent>
           </Card>
           <div className="mt-6 flex justify-between">

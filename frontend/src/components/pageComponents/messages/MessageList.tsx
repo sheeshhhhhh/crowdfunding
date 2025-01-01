@@ -15,15 +15,6 @@ const MessageList = () => {
     const { user } = useAuthContext()
 
     const scrollRef = useRef<HTMLDivElement>(null)
-    // const { data: pastConversations } = useQuery({
-    //     queryKey: ['pastConversations', search],
-    //     queryFn: async () => {
-    //         const response = await axiosFetch.get(`/message/getPastConversation?search=${search}`)
-
-    //         return response.data as pastConversations
-    //     },
-    //     refetchOnWindowFocus: false,
-    // })
     
     const { 
         data: pastConversations,
@@ -50,7 +41,6 @@ const MessageList = () => {
         }
     }
 
-    // use infinite scroll
     return (
         <Card>
             <CardContent className="p-4">

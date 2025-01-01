@@ -29,6 +29,11 @@ const NavBar = () => {
                         Browse
                     </Button>
                 </Link>
+                <Link to="/messages">
+                    <Button variant="outline">
+                        Messages
+                    </Button>
+                </Link>
             </div>
 
             {!isLoggedIn() && (

@@ -66,10 +66,12 @@ const MessagesDisplay = () => {
 
     const handleScroll = async () => {
         if (!scrollRef.current || !hasNextPage || isFetchingNextPage) return
+
         const { scrollTop } = scrollRef.current
+
         if (scrollTop === 0) {
             isFetchingOlder.current = true;
-            const { hasNextPage, } = await fetchNextPage()
+            const { hasNextPage } = await fetchNextPage()
             
             if(!hasNextPage) return // to prevent scrolling to the botttom
 
@@ -81,6 +83,7 @@ const MessagesDisplay = () => {
     useEffect(() => {
         if(!getMessages || !scrollRef.current) return
 
+        // to prevent scrolling to the bottom when fetching older messages
         if (isFetchingOlder.current) {
             isFetchingOlder.current = false;
             return;
