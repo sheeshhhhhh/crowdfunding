@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { RequestUser } from 'src/guards/user.decorator';
 import { InboxGateway } from 'src/inbox/inbox.gateway';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -10,21 +10,46 @@ export class MessageService {
         private readonly socket: InboxGateway,
     ) {}
 
-    async sendMessage(message: any, receiverId: string, user: RequestUser, conversationId?: string | undefined) {
-        
-        // if there is no conversationId, create a new conversation
-        if(!conversationId) {
-            const conversation = await this.prisma.conversation.create({
-                data: {
-                    participants: {
-                        connect: [
-                            { id: user.id },
-                            { id: receiverId }
-                        ]
-                    }
-                }
-            });
+    async createConversations(receiverId: string, user: RequestUser) {
+        const getConversation = await this.prisma.conversation.findFirst({
+            where: {
+                AND: [
+                    {
+                        participants: {
+                            some: { id: user.id },
+                        },
+                    },
+                    {
+                        participants: {
+                            some: { id: receiverId },
+                        },
+                    },
+                ]
+            }
+        })
 
+        // if there is no conversation
+        if(getConversation) {
+            return getConversation;
+        }
+        const createConversation = await this.prisma.conversation.create({
+            data: {
+                participants: {
+                    connect: [
+                        { id: user.id },
+                        { id: receiverId }
+                    ]
+                }
+            }
+        });
+
+        return createConversation
+    }
+
+    async sendMessage(message: any, receiverId: string, user: RequestUser, conversationId?: string | undefined) {
+
+        if(!conversationId) {
+            const conversation = await this.createConversations(receiverId, user);
             conversationId = conversation.id;
         }
 
@@ -65,21 +90,22 @@ export class MessageService {
         return createMessage;
     }
 
-    async getMessages(otherUserId: string, user: RequestUser, conversationId?: string) {
-        
+    async getMessages(otherUserId: string, user: RequestUser, page: string) {
+        const take = 20;
+        const skip = (parseInt(page) - 1 | 0)  * take;
+
         const allMessages = await this.prisma.conversation.findFirst({
             where: {
                 AND: [
-                    conversationId ? { id: conversationId } : {},
                     {
-                      participants: {
-                        some: { id: user.id },
-                      },
+                        participants: {
+                            some: { id: user.id },
+                        },
                     },
                     {
-                      participants: {
-                        some: { id: otherUserId },
-                      },
+                        participants: {
+                            some: { id: otherUserId },
+                        },
                     },
                 ]
             },
@@ -97,7 +123,8 @@ export class MessageService {
                             }
                         }
                     },
-                    take: 20,
+                    take: take,
+                    skip: skip
                 },
                 participants: {
                     where: {
@@ -113,7 +140,11 @@ export class MessageService {
                 }
             }
         })
-                
+
+        if(!allMessages) {
+            throw new NotFoundException('Conversation not found');
+        }
+
         if(allMessages) {
             allMessages.messages = allMessages.messages.reverse();
         }
@@ -121,7 +152,10 @@ export class MessageService {
         return allMessages
     }
 
-    async GetPastConversation(user: RequestUser, search: string) {
+    async GetPastConversation(user: RequestUser, search: string, page: string) {
+        const take = 9;
+        const skip = (parseInt(page) - 1 | 0)  * take;
+        
         const pastConversations = await this.prisma.conversation.findMany({
             where: {
                 AND: [
@@ -167,6 +201,8 @@ export class MessageService {
                     }
                 }
             },
+            take: take,
+            skip: skip
         })
 
         return pastConversations;

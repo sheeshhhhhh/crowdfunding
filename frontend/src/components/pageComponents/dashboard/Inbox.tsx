@@ -52,11 +52,9 @@ const Inbox = () => {
             </CardHeader>
             <CardContent>
                 <div
-                    ref={scrollRef}
-                    onScroll={handleScroll}
-                    className="h-[715px] pr-4 overflow-y-auto
-                        [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-100
-                        [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded-full"
+                ref={scrollRef}
+                onScroll={handleScroll}
+                className="h-[715px] pr-4 overflow-y-auto custom-scrollbar"
                 >
                     {isLoading ? (
                         <LoadingSpinner className="mt-4" />

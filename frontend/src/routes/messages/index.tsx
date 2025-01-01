@@ -1,3 +1,4 @@
+import ProtectedRoute from '@/components/common/ProtectedRoute'
 import MessageList from '@/components/pageComponents/messages/MessageList'
 import MessageView from '@/components/pageComponents/messages/MessageView'
 import { createFileRoute } from '@tanstack/react-router'
@@ -9,7 +10,11 @@ type searchParams = {
 }
 
 export const Route = createFileRoute('/messages/')({
-  component: RouteComponent,
+  component: () => (
+    <ProtectedRoute>
+        <RouteComponent />
+    </ProtectedRoute>
+  ),
   validateSearch: (search: Record<string, string>): searchParams => {
     return {
         userId: search.userId ? search.userId : '',

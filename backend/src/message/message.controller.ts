@@ -3,6 +3,7 @@ import { JwtAuthGuard } from 'src/guards/jwt.authguard';
 import { MessageService } from './message.service';
 import { RequestUser, User } from 'src/guards/user.decorator';
 import { MessageDto } from './dto/message.dto';
+import { query } from 'express';
 
 @UseGuards(JwtAuthGuard)
 @Controller('message')
@@ -17,13 +18,14 @@ export class MessageController {
     }
 
     @Get('getMessages/:otherUserId')
-    async getMessages(@Param('otherUserId') otherUserId: string, @User() user: RequestUser) {
-        return this.messageService.getMessages(otherUserId, user);
+    async getMessages(@Query('page') page: string, @Param('otherUserId') otherUserId: string, 
+    @User() user: RequestUser) {
+        return this.messageService.getMessages(otherUserId, user, page);
     }
 
     @Get('getPastConversation')
-    async getPastConversation(@User() user: RequestUser, @Query('search') search: string) {
-        return this.messageService.GetPastConversation(user, search);
+    async getPastConversation(@User() user: RequestUser, @Query() query: { search: string, page: string }) {
+        return this.messageService.GetPastConversation(user, query.search, query.page);
     }
 
     @Delete('deleteMessage/:messageId')
