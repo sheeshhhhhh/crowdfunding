@@ -1,11 +1,16 @@
-import { Bell, Layers, LogOut, Settings2, UserRound } from "lucide-react"
-import { Button } from "../ui/button"
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import { useAuthContext } from "@/context/AuthContext"
-import { useState } from "react"
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "../ui/sheet"
+import { useSocket } from "@/context/SocketContext"
+import axiosFetch from "@/lib/axios"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { Link } from "@tanstack/react-router"
+import { Bell, Layers, LogOut, Settings2, UserRound } from "lucide-react"
+import { useEffect, useState } from "react"
+import NotificationCard from "../pageComponents/dashboard/notification/NotificationCard"
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
+import { Button } from "../ui/button"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "../ui/sheet"
+import LoadingSpinner from "./LoadingSpinner"
 
 const NavBar = () => {
     const [isOpenSheet, setIsOpenSheet] = useState(false)
@@ -47,27 +52,7 @@ const NavBar = () => {
                 </div>
             )}
             {isLoggedIn() && <div className="flex items-center gap-4">
-                <Popover>
-                    <PopoverTrigger>
-                        <Button className="rounded-full" size="icon" variant="ghost">
-                            <Bell className="h-8 w-8" />
-                            <span className="sr-only">Toggle notifications</span>
-                        </Button>
-                    </PopoverTrigger>
-                    <PopoverContent align="end" className="w-[400px]">
-                        <header className="flex justify-between items-center">
-                            <h2 className="text-lg font-bold">
-                                Notifications
-                            </h2>
-                            <Link className="text-sm underline underline-offset-2 text-blue-500">
-                                View all
-                            </Link>
-                        </header>
-                        <div>
-                            {/* <NotificationList /> */}
-                        </div>
-                    </PopoverContent>
-                </Popover>
+                <Notifications />
                 <Sheet open={isOpenSheet} onOpenChange={setIsOpenSheet}>
                     <SheetTrigger>
                         <Avatar>
@@ -120,6 +105,82 @@ const NavBar = () => {
                 </Sheet>
             </div>}
         </header>
+    )
+}
+
+const Notifications = () => {
+    const queryClient = useQueryClient()
+    const { socket } = useSocket()
+    const { data: notifications, isLoading } = useQuery({
+        queryKey: ['unreadNotifs'],
+        queryFn: async () => {
+            const response = await axiosFetch.get('/inbox/unread')
+            return response.data
+        },
+        refetchOnWindowFocus: false
+    })
+
+    // listening to notification using sockets
+    useEffect(() => {
+        if(!socket) return
+
+        socket.on('notification', (data) => {
+            // update the unreadNotifs
+            queryClient.setQueryData(['unreadNotifs'], (oldData: any) => {
+                return {
+                    ...oldData,
+                    notifications: [data, ...oldData.notifications],
+                    unreadNotificationCount: oldData.unreadNotificationCount + 1
+                }
+            })
+
+            // update the notification in inbox dashboard
+            queryClient.invalidateQueries(['notifications'])
+        })
+
+        return () => {
+            socket.off('notification')
+        }
+    }, [socket])
+
+    return (
+        <Popover>
+            <PopoverTrigger>
+                <Button className="rounded-full relative" size="icon" variant="ghost">
+                    {
+                        notifications?.unreadNotificationCount ? 
+                        <span className="absolute top-0 right-0 h-4 w-4 bg-blue-500 rounded-full text-xs text-white">{notifications?.unreadNotificationCount}</span>
+                        : null
+                    }
+                    <Bell className="h-8 w-8" />
+                    <span className="sr-only">Toggle notifications</span>
+                </Button>
+            </PopoverTrigger>
+            <PopoverContent align="end" className="w-[600px]">
+                <header className="flex justify-between items-center">
+                    <h2 className="text-lg font-bold">
+                        Notifications
+                    </h2>
+                    <Link reloadDocument to={'/dashboard/Inbox'} className="text-sm underline underline-offset-2 text-blue-500">
+                        View all
+                    </Link>
+                </header>
+                <div className="space-y-2 py-2">
+                    {
+                        isLoading ? 
+                        <LoadingSpinner /> :
+                        notifications?.length !== 0 ?
+                            notifications?.notifications?.map((notification: any) => (
+                                <NotificationCard key={notification.id} size="sm" notification={notification} />
+                            ))
+                        :
+                        <div className="text-center text-muted-foreground">
+                            No Unread notifications
+                        </div>
+                    }
+                </div>
+            </PopoverContent>
+        </Popover>
     )
 }
 

@@ -20,6 +20,11 @@ export class InboxController {
         return this.inboxService.getNotifications(user, query);
     }
 
+    @Get('unread')
+    async getUnreadNotifications(@User() user: RequestUser) {
+        return this.inboxService.getUnreadNotifications(user);
+    }
+
     @Get(':id')
     async getNotificationById(@Param('id') id: string) {
         return this.inboxService.getNotificationById(id);

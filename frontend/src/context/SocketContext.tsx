@@ -27,7 +27,7 @@ const SocketProvider = ({ children }: PropsWithChildren<{}>) => {
 
     useEffect(() => {
         if(!user) return;
-        // if production just make it ''
+
         const newSocket = io('http://localhost:5000', {
             autoConnect: true,
             reconnection: true,
@@ -38,14 +38,6 @@ const SocketProvider = ({ children }: PropsWithChildren<{}>) => {
             }
         })
         setSocket(newSocket);
-
-        newSocket.on('connect', () => {
-            console.log('Connected to socket');
-        })
-
-        newSocket.on('notification', (data) => {
-            console.log('notifs', data);
-        })
 
         return () => {
             newSocket.off('connect');

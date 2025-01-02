@@ -1,14 +1,10 @@
 import LoadingSpinner from "@/components/common/LoadingSpinner"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import axiosFetch from "@/lib/axios"
-import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query"
-import { format } from "date-fns"
-import { MoreHorizontal, MailOpen, Trash2 } from "lucide-react"
-import { useRef, useState } from "react"
-import { Button } from "@/components/ui/button"
+import { useInfiniteQuery } from "@tanstack/react-query"
+import { useRef } from "react"
 import toast from "react-hot-toast"
+import NotificationCard from "./notification/NotificationCard"
 
 const fetchNotifications = async ({ pageParam = 1 }: { pageParam?: number }) => {
     const response = await axiosFetch.get(`/inbox/notifications?page=${pageParam}&filter=unread`);
@@ -31,6 +27,7 @@ const Inbox = () => {
         {
             getNextPageParam: (lastPage) => lastPage.nextPage,
             onError: () => toast.error("Failed to fetch data"),
+            refetchOnWindowFocus: false
         }
     );
 
@@ -63,25 +60,8 @@ const Inbox = () => {
                     ) : (
                         <div className="space-y-8">
                             {data?.pages.map((page) =>
-                                page.data.map((message: any) => (
-                                    <div key={message.id} className="flex items-center">
-                                        <div className="flex-shrink-0 mr-3">
-                                            {!message.isRead && (
-                                                <div className="w-2 h-2 bg-blue-600 rounded-full" aria-hidden="true" />
-                                            )}
-                                        </div>
-                                        <Avatar className="h-9 w-9">
-                                            <AvatarFallback>A</AvatarFallback>
-                                        </Avatar>
-                                        <div className="ml-4 space-y-1">
-                                            <p className="text-sm font-medium">{message.title}</p>
-                                            <p className="text-sm text-muted-foreground">{message.message}</p>
-                                        </div>
-                                        <div className="ml-auto text-sm text-muted-foreground">
-                                            {format(new Date(message.createdAt), "yyyy-MM-dd")}
-                                        </div>
-                                        <NotificationOptions id={message.id} />
-                                    </div>
+                                page.data?.map((notification: any) => (
+                                    <NotificationCard key={notification.id} notification={notification} />
                                 ))
                             )}
                         </div>
@@ -95,75 +75,5 @@ const Inbox = () => {
         </Card>
     );
 };
-// mark as read
-// delete notification
-type NotificationOptionsProps = {
-    id: string
-}
-
-const NotificationOptions = ({
-    id
-}: NotificationOptionsProps) => {
-    const queryClient = useQueryClient()
-    const [isOpen, setIsOpen] = useState(false)
-
-    const { mutate: DeleteNotification, isLoading: isLoadingDelete } = useMutation({
-        mutationKey: ['deleteNotification'],
-        mutationFn: async () => {
-            const response = await axiosFetch.delete(`/inbox/${id}`)
-
-            if(response.status >= 400) {
-                throw new Error(response.data.message)
-            }
-
-            setIsOpen(false)
-            return response.data
-        },
-        onError: (error: any) => {
-            toast.error(error.message)
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['notifications']})
-        }
-    })
-
-    const { mutate: MarkAsRead, isLoading: isLoadingMarkAsRead } = useMutation({
-        mutationKey: ['markAsRead'],
-        mutationFn: async () => {
-            const response = await axiosFetch.patch(`/inbox/mark-as-read/${id}`)
-
-            if(response.status >= 400) {
-                throw new Error(response.data.message)
-            }
-
-            setIsOpen(false)
-            return response.data
-        },
-        onError: (error: any) => {
-            toast.error(error.message)
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['notifications']})
-        }
-    })
-
-    return (
-        <Popover open={isOpen} onOpenChange={setIsOpen}>
-            <PopoverTrigger>
-                <Button className="ml-2" variant={'ghost'}>
-                    <MoreHorizontal />
-                </Button>
-            </PopoverTrigger>
-            <PopoverContent align="end" className="flex flex-col space-y-2">
-                <Button disabled={isLoadingMarkAsRead} onClick={() => MarkAsRead()}>
-                    {isLoadingMarkAsRead ? <LoadingSpinner /> : <div className="flex items-center gap-2"><MailOpen /> Mark as read</div>}
-                </Button>
-                <Button disabled={isLoadingDelete} variant="destructive" onClick={() => DeleteNotification()}>
-                    {isLoadingDelete ? <LoadingSpinner /> : <div className="flex items-center gap-2"><Trash2 /> Delete</div>}
-                </Button>
-            </PopoverContent>
-        </Popover>
-    )
-}
 
 export default Inbox

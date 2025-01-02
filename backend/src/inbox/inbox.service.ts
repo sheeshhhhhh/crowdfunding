@@ -56,7 +56,30 @@ export class InboxService {
         }
     }
 
+    async getUnreadNotifications(user: RequestUser) {
+        const notification = await this.prisma.notification.findMany({
+            where: {
+                userId: user.id,
+                isRead: false
+            },
+            orderBy: {
+                createdAt: 'desc'
+            }
+        })
 
+        const unreadNotificationCount = await this.prisma.notification.count({
+            where: {
+                userId: user.id,
+                isRead: false
+            }
+        })
+
+        return {
+            notifications: notification,
+            unreadNotificationCount: unreadNotificationCount
+        }
+    }
+    
     async getNotifications(user: RequestUser, query: { page: string }) {
         const take = 15;
         const skip = (parseInt(query.page) - 1) * take;
@@ -64,6 +87,9 @@ export class InboxService {
         const notification = await this.prisma.notification.findMany({
             where: {
                 userId: user.id,
+            },
+            orderBy: {
+                createdAt: 'desc'
             },
             take: take,
             skip: skip,
