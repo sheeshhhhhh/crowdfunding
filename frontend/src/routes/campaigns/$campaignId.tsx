@@ -67,7 +67,8 @@ function RouteComponent() {
   }
 
   const content = readMore ? campaign.body : campaign.body.substring(0, 700) + '...'
-  const daysLeft = campaign.endDate && differenceInCalendarDays(new Date(campaign?.endDate), new Date())
+  const date = campaign.endDate && differenceInCalendarDays(new Date(campaign.endDate), new Date())
+  const endDateText = date ? (date < 0 ? 'Ended' : `${date} days left`) : 'No EndDate'
   const progress = (campaign.current / campaign.goal) * 100
 
   return (
@@ -168,11 +169,7 @@ function RouteComponent() {
             </Badge>
             <Badge variant="secondary" className="flex items-center">
               <CalendarDays className="mr-1 h-3 w-3" />
-              {
-                daysLeft ? 
-                daysLeft + "days left"
-                : "No EndDate"
-              }
+              {endDateText}
             </Badge>
           </div>
         </div>

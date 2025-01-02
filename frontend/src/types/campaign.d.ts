@@ -7,12 +7,24 @@ const CampaignStatus = {
 } as const;
 type CampaignStatus = typeof CampaignStatus[keyof typeof CampaignStatus];
 
+const CampaignCategory = {
+    MEDICAL = "MEDICAL",
+    EDUCATION = "EDUCATION",
+    ENVIRONMENT = "ENVIRONMENT",
+    ANIMALS = "ANIMALS",
+    DISASTER = "DISASTER",
+    BUSINESS = "BUSINESS",
+    OTHER = "OTHER",
+} as const;
+export type CampaignCategory = typeof CampaignCategory[keyof typeof CampaignCategory];
+
 export type CampaignPost = {
     id: string,
     userId: string,
     title: string,
     headerImage: string,
     status: string,
+    category?: CampaignCategory,
 
     body: string,
 

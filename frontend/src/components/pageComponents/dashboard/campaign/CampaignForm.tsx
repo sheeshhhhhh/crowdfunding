@@ -4,6 +4,8 @@ import Tiptap from '@/components/common/Tiptap'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { CampaignCategory as CampaignCategoryType } from '@/types/campaign'
 import { useMutation } from '@tanstack/react-query'
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
@@ -14,6 +16,7 @@ export type dataStateType = {
     body: string
     goal: number
     endDate: Date | undefined
+    category?: CampaignCategoryType
 }
 
 export type initialDataType = {
@@ -21,7 +24,8 @@ export type initialDataType = {
     title: string
     body: string
     goal: number
-    endDate: Date | undefined
+    endDate: Date | undefined,
+    category?: CampaignCategoryType
 }
 
 type CampaignFormProps = {
@@ -42,6 +46,7 @@ const CampaignForm = ({
         body: initialData?.body || '',
         goal: initialData?.goal || 0,
         endDate: initialData?.endDate || undefined,
+        category: initialData?.category || undefined
     })
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -84,13 +89,12 @@ const CampaignForm = ({
     const { mutate, isLoading } = useMutation({
         mutationKey: ['campaigns', 'create'],
         mutationFn: async () => {
-            console.log(data)
             if(!isValid()) return toast.error('Please fill in all required fields.')
 
             await onSubmit(data)
         }
     })
-
+    
     return (
         <div className='space-y-4 my-8'>
             <div>
@@ -100,10 +104,28 @@ const CampaignForm = ({
                 ) : null}
                 <Input onChange={(e) => handleImageChange(e)} type='file' />
             </div>
-            <div className="grid w-full items-center gap-1.5">
-                <Label className='text-base' htmlFor="title">Title</Label>
-                <Input value={data.title} onChange={(e) => setData({...data, title: e.target.value})} 
-                className='w-full max-w-[800px]' type="text" id="title" placeholder="Title...." />
+            <div className='flex gap-5'>
+                <div className="grid w-full items-center gap-1.5">
+                    <Label className='text-base' htmlFor="title">Title</Label>
+                    <Input value={data.title} onChange={(e) => setData({...data, title: e.target.value})} 
+                    className='w-full max-w-[800px]' type="text" id="title" placeholder="Title...." />
+                </div>
+                <div className='grid w-[175px] items-center gap-1.5'>
+                    <Label className='text-base' htmlFor="category">Category</Label>
+                    <Select value={data.category} onValueChange={(value) => setData({...data, category: value as CampaignCategoryType})}>
+                        <SelectTrigger>
+                            <SelectValue placeholder="Category" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {['MEDICAL', 'EDUCATION', 'ENVIRONMENT', 'ANIMALS', 'DISASTER', 'BUSINESS', 'OTHER']
+                            .map((category) => (
+                                <SelectItem className='first-letter:uppercase' value={category}>
+                                    {category.toLowerCase()}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                </div>
             </div>
             <div className='flex gap-5'>
                 <div className="grid w-full items-center gap-1.5 max-w-[200px]">

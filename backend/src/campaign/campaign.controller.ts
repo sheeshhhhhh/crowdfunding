@@ -18,6 +18,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from 'src/guards/jwt.authguard';
 import { IsPublic } from 'src/guards/IsPublic.decorator';
 import * as multer from 'multer';
+import { CampaignCategory } from '@prisma/client';
 
 @UseGuards(JwtAuthGuard)
 @Controller('campaign')
@@ -46,7 +47,7 @@ export class CampaignController {
   @IsPublic()
   @Get('browse-campaigns')
   async browseCampaigns(
-    @Query() searchQuery: { search: string; page: number; filter: string },
+    @Query() searchQuery: { search: string; page: number; filter: CampaignCategory },
   ) {
     // add search later on
     return this.campaignService.BrowseCampaigns(searchQuery);

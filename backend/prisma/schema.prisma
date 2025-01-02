@@ -50,6 +50,16 @@ enum CampaignStatus {
   FAILED
 }
 
+enum CampaignCategory {
+  MEDICAL
+  EDUCATION
+  ENVIRONMENT
+  ANIMALS
+  DISASTER
+  BUSINESS
+  OTHER
+}
+
 // campaign
 model CampaignPost {
   id          String   @id @default(cuid())
@@ -57,7 +67,7 @@ model CampaignPost {
   headerImage String
   title       String
   status      CampaignStatus @default(ACTIVE)
-
+  category    CampaignCategory? 
   body        String
 
   goal        Int // money goal

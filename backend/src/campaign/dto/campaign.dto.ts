@@ -1,4 +1,4 @@
-import { CampaignStatus } from '@prisma/client';
+import { CampaignCategory, CampaignStatus } from '@prisma/client';
 import { IsEnum, IsNumberString, IsOptional, IsString } from 'class-validator';
 
 export class CreateCampaignDto {
@@ -14,6 +14,11 @@ export class CreateCampaignDto {
   @IsString()
   @IsOptional()
   endDate: string;
+
+  @IsOptional()
+  @IsString()
+  @IsEnum(CampaignCategory)
+  category?: CampaignCategory
 }
 
 export class UpdateCampaignDto extends CreateCampaignDto {

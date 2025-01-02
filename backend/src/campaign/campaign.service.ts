@@ -4,7 +4,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { CampaignCategory, Prisma } from '@prisma/client';
 import { RequestUser } from 'src/guards/user.decorator';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateCampaignDto, UpdateCampaignDto } from './dto/campaign.dto';
@@ -42,6 +42,7 @@ export class CampaignService {
           title: body.title,
           body: body.body,
           endDate: body.endDate,
+          category: body.category,
         },
       });
 
@@ -73,7 +74,7 @@ export class CampaignService {
   async BrowseCampaigns(searchQuery: {
     search: string;
     page: number;
-    filter: string;
+    filter: CampaignCategory | undefined;
   }) {
     // implement search and pagination later on
     const campaigns = await this.prisma.campaignPost.findMany({
@@ -82,6 +83,7 @@ export class CampaignService {
           contains: searchQuery.search,
           mode: 'insensitive',
         },
+        category: searchQuery.filter ? searchQuery.filter : undefined,
       },
       include: {
         user: {
