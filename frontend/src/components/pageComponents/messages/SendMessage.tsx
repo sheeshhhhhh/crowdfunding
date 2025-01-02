@@ -7,7 +7,7 @@ import { useNavigate, useSearch } from '@tanstack/react-router'
 import { Send } from 'lucide-react'
 import { FormEvent, useState } from 'react'
 import toast from 'react-hot-toast'
-import { updateMessages } from './hooks/message.hook'
+import { updateMessages, updatePastConversations } from './hooks/message.hook'
 
 const SendMessage = () => {
     const [message, setMessage] = useState<string>('')
@@ -15,7 +15,7 @@ const SendMessage = () => {
     const navigate = useNavigate({ from: '/messages' })
     const queryClient = useQueryClient();
 
-    const { userId, conversationId } = useSearch({ from: '/messages/'}) 
+    const { userId, conversationId, search } = useSearch({ from: '/messages/'}) 
 
     const handleMessage = async (e: FormEvent) => {
         e.preventDefault()
@@ -47,7 +47,9 @@ const SendMessage = () => {
                 // update message
                 updateMessages(userId, response.data, queryClient)
 
-                queryClient.invalidateQueries(['pastConversations'])
+                // update pastConversation
+                updatePastConversations(search || '', response.data, queryClient)
+
                 if(!conversationId) {
                     // request the message if it's a new conversation
                     queryClient.invalidateQueries(['getMessages', userId])

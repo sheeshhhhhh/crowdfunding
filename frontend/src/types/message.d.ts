@@ -23,13 +23,21 @@ export type message = {
     createAt: string
 }
 
+export type ConversationMessage = {
+    sender: {
+        id: string,
+        username: string,
+        profile: string
+    }
+} & message
+
 export type conversation = {
     id: string,
     updatedAt: string,
     createAt: string,
 
     participants: participant[],
-    messages: message[]
+    messages: ConversationMessage[]
 }
 
 export type pastConversations = conversation[]

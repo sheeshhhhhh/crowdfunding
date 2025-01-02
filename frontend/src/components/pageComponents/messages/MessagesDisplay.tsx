@@ -1,13 +1,13 @@
+import LoadingSpinner from "@/components/common/LoadingSpinner"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useAuthContext } from "@/context/AuthContext"
 import { useSocket } from "@/context/SocketContext"
+import { ConversationMessage, message } from "@/types/message"
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query"
 import { useSearch } from "@tanstack/react-router"
 import { useEffect, useRef } from "react"
-import { fetchMessages, updateMessages } from "./hooks/message.hook"
 import toast from "react-hot-toast"
-import { message, pastConversations } from "@/types/message"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import LoadingSpinner from "@/components/common/LoadingSpinner"
+import { fetchMessages, handleTimeTrasnform, updateMessages, updatePastConversations } from "./hooks/message.hook"
 
 
 const MessagesDisplay = () => {
@@ -46,17 +46,7 @@ const MessagesDisplay = () => {
         socket?.on('message',  (data: message) => {
             updateMessages(userId, data, queryClient)
 
-            queryClient.setQueryData(['pastConversations', search], (old: pastConversations | undefined) => old ?
-                old.map((conversations) => {
-                    if(conversations.id === conversationId) {
-                        return {
-                            ...conversations,
-                            messages: [data]
-                        }
-                    }
-                    return conversations
-                })
-            : undefined)
+            updatePastConversations(search || '', data, queryClient)
         })
 
         return () => {
@@ -104,10 +94,9 @@ const MessagesDisplay = () => {
                 isLoading ? <LoadingSpinner className="mt-4" /> : 
                 isError ? <p className="text-center text-muted-foreground mt-4">Failed to load  </p> :
                 getMessages?.pages?.slice().reverse()?.map((page) => 
-                    page?.data.messages?.map((message: any) => {
+                    page?.data.messages?.map((message: ConversationMessage) => {
                         const isSender = message.senderId === user.id
                         const senderInfo = message.sender
-                        const time = new Date(message.createAt).toLocaleTimeString(navigator.language, { hour: '2-digit', minute:'2-digit' })
                         
                         return (
                             <div
@@ -119,13 +108,13 @@ const MessagesDisplay = () => {
                                         <AvatarImage src={senderInfo.profile} alt={senderInfo.username} />
                                         <AvatarFallback>{senderInfo.username[0]}</AvatarFallback>
                                     </Avatar>
-                                    <div className={`min-w-[40%] max-w-[70%] p-3 rounded-lg ${
+                                    <div className={`min-w-[150px] max-w-[70%] p-3 rounded-lg ${
                                         isSender 
                                         ? "bg-blue-500 text-white"
                                         : "bg-gray-100 text-gray-800"
                                     }`}>
                                         <p className="text-sm">{message.message}</p>
-                                        <p className="text-xs mt-1 opacity-70">{time}</p>
+                                        <p className="text-xs mt-1 opacity-70">{handleTimeTrasnform(message.createAt)}</p>
                                     </div>
                                 </div>
                             </div>   

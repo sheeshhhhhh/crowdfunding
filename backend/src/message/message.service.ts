@@ -208,8 +208,6 @@ export class MessageService {
         return pastConversations;
     }
 
-    
-
     async DeleteMessage(messageId: string, user: RequestUser) {
         // get message
         const message = await this.prisma.message.findFirst({

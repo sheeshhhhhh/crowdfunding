@@ -1,7 +1,6 @@
 import axiosFetch from "@/lib/axios";
 import { conversation, message, pastConversations } from "@/types/message";
 
-// should go to hooks
 export const fetchMessages = async (userId: string | undefined, pageParam: number)=> {
     const response = await axiosFetch.get('/message/getMessages/' + userId + `?page=${pageParam}`, 
         { 
@@ -24,6 +23,16 @@ export const fetchPastConversations = async (search: string | undefined, pagePar
     return { data: response.data as pastConversations, nextPage: response.data.length > 0 ? pageParam + 1 : null }
 }
 
+export const handleTimeTrasnform = (time: string) => {
+    const isToday = new Date(time).toDateString() === new Date().toDateString()
+    if(isToday) {
+        return new Date(time).toLocaleTimeString(navigator.language, { hour: '2-digit', minute:'2-digit' })
+    } else {
+        return new Date(time).toLocaleString(navigator.language, { month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit' })
+    }
+}
+
+// updating the queries. and yes it's a bit complex because of infinitequery
 export const updateMessages = async (userId: string, data: message, queryClient: any) => {
     queryClient.setQueryData(['getMessages', userId], (old: any) => {
         if (!old) return old; // Handle case where there's no existing data
@@ -53,4 +62,28 @@ export const updateMessages = async (userId: string, data: message, queryClient:
             }),
         };
     });
+}
+
+export const updatePastConversations = async (search: string, updatedData: message, queryClient: any) => {
+    queryClient.setQueryData(['pastConversations', search], (oldData: any) => {
+        if(!oldData) return
+         
+        return {
+            ...oldData,
+            pages: oldData.pages.map((pages: any) => {
+                return {
+                    ...pages,
+                    data: pages.data.map((data: any) => {
+                        if(data.id === updatedData.conversationId) {
+                            return {
+                                ...data,
+                                messages: [updatedData]
+                            }
+                        }
+                        return data
+                    })
+                }
+            })
+        }
+    })
 }
