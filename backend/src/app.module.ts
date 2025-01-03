@@ -13,6 +13,7 @@ import { UserModule } from './user/user.module';
 import { InboxModule } from './inbox/inbox.module';
 import { EmailSenderModule } from './email-sender/email-sender.module';
 import { MessageModule } from './message/message.module';
+import { StripeModule } from './stripe/stripe.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { MessageModule } from './message/message.module';
     InboxModule,
     EmailSenderModule,
     MessageModule,
+    StripeModule.forRootAsync(),
   ],
   controllers: [AppController],
   providers: [AppService],

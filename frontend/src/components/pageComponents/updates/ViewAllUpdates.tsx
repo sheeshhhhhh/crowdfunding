@@ -1,5 +1,3 @@
-import LoadingSpinner from "@/components/common/LoadingSpinner"
-import { Button } from "@/components/ui/button"
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import axiosFetch from "@/lib/axios"
 import { Update } from "@/types/update"
@@ -41,7 +39,7 @@ const ViewAllUpdates = ({
 
     return (
         <Dialog>
-            <DialogTrigger>
+            <DialogTrigger asChild>
                 <button className='text-muted-foreground underline underline-offset-2 mt-3'>
                     see All Update
                 </button>

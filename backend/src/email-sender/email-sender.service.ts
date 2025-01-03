@@ -119,4 +119,24 @@ export class EmailSenderService {
             throw new InternalServerErrorException('Error sending email');
         }
     }
+
+    async sendDonationEmail(to: string, name: string, amount: number, img?: string) {
+        try {
+            const sendEmail = await this.sendEmail(
+                to,
+                'Donation ',
+                `Thankyou for Donation! ${name}`,
+                 `
+                  Thank you for your $${amount / 100} donation! 
+                  Your support is making a real difference and helps us continue our mission. 
+                  We truly appreciate your contribution and commitment to creating positive change.
+                `,
+                img
+            )
+
+            return sendEmail
+        } catch (error) {
+            throw new InternalServerErrorException('Error sending email');
+        }    
+    }
 }

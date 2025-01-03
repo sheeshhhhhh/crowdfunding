@@ -145,7 +145,7 @@ const Notifications = () => {
 
     return (
         <Popover>
-            <PopoverTrigger>
+            <PopoverTrigger asChild>
                 <Button className="rounded-full relative" size="icon" variant="ghost">
                     {
                         notifications?.unreadNotificationCount ? 

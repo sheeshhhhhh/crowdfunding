@@ -7,8 +7,10 @@ import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 
 type searchParams = {
-    client_key: string,
-    payment_intent_id: string
+    client_key?: string,
+    payment_intent_id?: string,
+    sessionId?: string,
+    type: "paymongo" | "stripe" | ""
 }
 
 export const Route = createFileRoute('/donation/check')({
@@ -16,7 +18,9 @@ export const Route = createFileRoute('/donation/check')({
   validateSearch: (search: Record<string, any>): searchParams => {
     return {
         client_key: search?.client_key ?? '',
-        payment_intent_id: search?.payment_intent_id ?? ''
+        payment_intent_id: search?.payment_intent_id ?? '',
+        sessionId: search?.sessionId ? search?.sessionId : '',
+        type: search?.type ? search.type : ''
     }
   }
 })
@@ -28,13 +32,17 @@ function RouteComponent() {
     const [donationId, setDonationId] = useState<string>('')
     const [campaignId, setCampaignId] = useState<string>('')
 
-    const { payment_intent_id } = Route.useSearch()
+    const { payment_intent_id, sessionId, type } = Route.useSearch()
 
     const checkPaymentIntentStatus = async () => {
+        if(isLoading) return // to prevent duplicates
         setIsLoading(true)
+
         try {
+            const paymentId = type === 'stripe' ? sessionId : payment_intent_id
             const saveDonation = await axiosFetch.post('/donation/check', {
-                paymentId: payment_intent_id,
+                paymentId: paymentId,
+                type: type
             })    
 
             if(saveDonation.data.success === true) {

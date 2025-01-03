@@ -20,8 +20,8 @@ export class DonationController {
 
   @UseGuards(OptionalAuthGuard)
   @Post('check')
-  async checkDonations(@User() user: RequestUser, @Body() body: any) {
-    return this.donationService.checkDonations(user?.id, body.paymentId);
+  async checkDonations(@User() user: RequestUser, @Body() body: { paymentId: string, type: string }) {
+    return this.donationService.checkDonations(user?.id, body);
   }
 
   @UseGuards(JwtAuthGuard)

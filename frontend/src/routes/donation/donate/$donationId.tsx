@@ -76,9 +76,12 @@ function RouteComponent() {
                 ...billingInfo
             })
 
-            if(response.status === 201) {
-                console.log(response.data.redirectUrl)
-                window.location.assign(response.data.redirectUrl)
+            if(response.data.success === false) return toast.error('error processing donation') // redirect to error page
+
+            if(response.data.type === 'paymongo') {
+                window.location.href = response.data.redirectUrl
+            } else {
+                window.location.href = response.data.stripeSession.url
             }
         } catch (error) {
             toast.error('An error occurred while processing your donation')
@@ -87,7 +90,7 @@ function RouteComponent() {
         }
     }
 
-    if(campaignData === undefined) {
+    if(campaignData === undefined) { // redirect to 404 page
         return null
     }
 

@@ -91,7 +91,7 @@ export class PaymentService {
     clientKey: string,
   ) {
     try {
-      const returnUrl = `${process.env.CLIENT_BASE_URL}/donation/check?client_key=${clientKey}`;
+      const returnUrl = `${process.env.CLIENT_BASE_URL}/donation/check?client_key=${clientKey}&type=paymongo`;
 
       const response = await axios.post(
         `${process.env.PAYMONGO_API_URL}/payment_intents/${paymentIntentId}/attach`,
