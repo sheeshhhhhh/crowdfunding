@@ -8,6 +8,7 @@ import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { Eye, EyeOff } from 'lucide-react'
 import { useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
 
 export const Route = createFileRoute('/signup/')({
   component: RouteComponent,
@@ -41,6 +42,10 @@ function RouteComponent() {
       const response = await axiosFetch.post('/auth/signup', data);
 
       // might want him to login automatically after signing up
+      if(response.status >= 400) {
+        toast.error('An error occurred')
+      }
+
       navigate({ to: '/login'})
     } catch (e: any) {
       if (e.response?.status === 400) {

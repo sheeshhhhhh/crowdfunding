@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogTrigger, DialogFooter, DialogHeader, DialogDescription, DialogTitle } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogDescription, DialogTitle } from "@/components/ui/dialog"
 import { useState } from "react"
 import UpdateForm, { UpdateFormType } from "./UpdateForm"
 import { SubmitHandler } from "react-hook-form"

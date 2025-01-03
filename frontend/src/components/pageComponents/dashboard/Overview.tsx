@@ -7,15 +7,6 @@ import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts"
 import LoadingSpinner from "@/components/common/LoadingSpinner"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
-const donationData = [
-  { name: 'Jan', amount: 4000 },
-  { name: 'Feb', amount: 3000 },
-  { name: 'Mar', amount: 2000 },
-  { name: 'Apr', amount: 2780 },
-  { name: 'May', amount: 1890 },
-  { name: 'Jun', amount: 2390 },
-]
-
 const chartConfig = {
     month: {
         label: 'Month'

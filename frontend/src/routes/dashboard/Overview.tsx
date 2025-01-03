@@ -1,4 +1,3 @@
-import NavBar from '@/components/common/NavBar'
 import ProtectedRoute from '@/components/common/ProtectedRoute'
 import DashboardSidebar from '@/components/pageComponents/dashboard/DashboardSidebar'
 import Overview from '@/components/pageComponents/dashboard/Overview'

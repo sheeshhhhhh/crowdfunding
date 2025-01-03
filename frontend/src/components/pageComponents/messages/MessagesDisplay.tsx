@@ -13,7 +13,7 @@ import { fetchMessages, handleTimeTrasnform, updateMessages, updatePastConversat
 const MessagesDisplay = () => {
     const { user } = useAuthContext()
     const { socket } = useSocket()
-    const { userId, conversationId, search } = useSearch({ from: '/messages/'})
+    const { userId, search } = useSearch({ from: '/messages/'})
 
     const scrollRef = useRef<HTMLDivElement>(null)
     const isFetchingOlder = useRef(false); // to track if we're fetching older messages

@@ -43,12 +43,6 @@ function Index() {
     }
   ] 
 
-  const handleLogout = () => {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    window.location.reload();
-  }
-
   return (
     <div className="flex flex-col height-withNav">
 

@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { useAuthContext } from "@/context/AuthContext"
 import useDebounce from "@/hooks/useDebounce"
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query"
+import { useInfiniteQuery } from "@tanstack/react-query"
 import { Link, useNavigate, useSearch } from "@tanstack/react-router"
 import { Search } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
@@ -20,8 +20,8 @@ const MessageList = () => {
         data: pastConversations,
         fetchNextPage,
         hasNextPage,
-        isLoading,
-        isError,
+        //isLoading,
+        //isError,
         isFetchingNextPage,
     } = useInfiniteQuery({
         queryKey: ['pastConversations', search],
@@ -46,7 +46,7 @@ const MessageList = () => {
             <CardContent className="p-4">
                 <MessageSearch initialSearch={search} />
                     <div onScroll={handleScroll} ref={scrollRef} className="space-y-5 h-[calc(100vh-16rem)] overflow-y-scroll custom-scrollbar">
-                        {pastConversations?.pages.map((page, index) => (
+                        {pastConversations?.pages.map((page) => (
                             page.data.map((conversation) => {
                                 const person = conversation.participants[0]
                                 const isMessageYours = conversation?.messages[0]?.senderId === user.id

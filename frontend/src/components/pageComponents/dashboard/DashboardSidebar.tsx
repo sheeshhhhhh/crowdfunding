@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { Link } from "@tanstack/react-router"
-import { Calendar, CreditCard, Home, Inbox, Layers, Settings } from "lucide-react"
+import { Calendar, CreditCard, Home, Inbox, Layers } from "lucide-react"
 
 const DashboardSidebar = () => {
 

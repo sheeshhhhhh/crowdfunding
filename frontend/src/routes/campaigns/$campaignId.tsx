@@ -14,7 +14,7 @@ import axiosFetch from '@/lib/axios'
 import { CampaignPostWithUpdates } from '@/types/campaign'
 import { useQuery } from '@tanstack/react-query'
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { differenceInCalendarDays, format, set } from 'date-fns'
+import { differenceInCalendarDays, format } from 'date-fns'
 import { CalendarDays, Users, Clipboard, Check } from 'lucide-react'
 import { useEffect, useState } from 'react'
 

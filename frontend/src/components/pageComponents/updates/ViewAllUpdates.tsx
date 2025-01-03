@@ -1,4 +1,4 @@
-import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import axiosFetch from "@/lib/axios"
 import { Update } from "@/types/update"
 import { useQuery } from "@tanstack/react-query"
