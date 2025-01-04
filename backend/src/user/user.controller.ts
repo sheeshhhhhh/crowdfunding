@@ -65,7 +65,6 @@ export class UserController {
         @UploadedFile() file: Express.Multer.File,
         @Body() body: UpdateUserProfileDto,
     ) {
-        console.log(file)
         return this.userService.updateUserProfile(user, file, body);
     }
 }

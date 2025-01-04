@@ -9,6 +9,7 @@ import { Search } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 import toast from "react-hot-toast"
 import { fetchPastConversations } from "./hooks/message.hook"
+import LoadingSpinner from "@/components/common/LoadingSpinner"
 
 const MessageList = () => {
     const { conversationId, search } = useSearch({ from: '/messages/'})
@@ -20,7 +21,6 @@ const MessageList = () => {
         data: pastConversations,
         fetchNextPage,
         hasNextPage,
-        //isLoading,
         //isError,
         isFetchingNextPage,
     } = useInfiniteQuery({
@@ -81,6 +81,7 @@ const MessageList = () => {
                                 )
                             })
                         ))}
+                        {isFetchingNextPage && <LoadingSpinner className="mt-2" />}
                     </div>
             </CardContent>
         </Card>

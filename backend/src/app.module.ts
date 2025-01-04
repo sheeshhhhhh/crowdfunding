@@ -14,23 +14,33 @@ import { InboxModule } from './inbox/inbox.module';
 import { EmailSenderModule } from './email-sender/email-sender.module';
 import { MessageModule } from './message/message.module';
 import { StripeModule } from './stripe/stripe.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
+
+const imports = [
+  AuthModule,
+  PrismaModule,
+  ConfigModule.forRoot({ isGlobal: true }),
+  CampaignModule,
+  FileUploadModule,
+  PaymentModule,
+  DonationModule,
+  UpdateModule,
+  UserModule,
+  InboxModule,
+  EmailSenderModule,
+  MessageModule,
+  StripeModule.forRootAsync()
+]
+
+if(process.env.ENVIRONMENT === 'production') {
+  imports.push(ServeStaticModule.forRoot({
+    rootPath: join(__dirname, '../../', 'frontend', 'dist'),
+  }))
+}
 
 @Module({
-  imports: [
-    AuthModule,
-    PrismaModule,
-    ConfigModule.forRoot({ isGlobal: true }),
-    CampaignModule,
-    FileUploadModule,
-    PaymentModule,
-    DonationModule,
-    UpdateModule,
-    UserModule,
-    InboxModule,
-    EmailSenderModule,
-    MessageModule,
-    StripeModule.forRootAsync(),
-  ],
+  imports: imports,
   controllers: [AppController],
   providers: [AppService],
 })

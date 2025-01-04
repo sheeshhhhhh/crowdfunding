@@ -1,0 +1,13 @@
+{
+  "name": "crowdfunding-website",
+  "version": "1.0.0",
+  "description": "This is a website made so that you can have crowdfunding for people, animal and other things that you might need.",
+  "main": "index.js",
+  "scripts": {
+    "build": "cd frontend && npm install && npm run build && cd ../backend && npm install && npm run build",
+    "start": "cd backend && npm run start:prod"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

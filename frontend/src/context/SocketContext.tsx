@@ -1,5 +1,5 @@
-import { Socket, io } from 'socket.io-client';
 import { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react';
+import { io, Socket } from 'socket.io-client';
 import { useAuthContext } from './AuthContext';
 
 type SocketContextType = {
@@ -28,7 +28,10 @@ const SocketProvider = ({ children }: PropsWithChildren<{}>) => {
     useEffect(() => {
         if(!user) return;
 
-        const newSocket = io('http://localhost:5000', {
+        const isProduction = import.meta.env.VITE_ENVIRONMENT === 'production';
+        const socketConnection = isProduction ? '' : 'http://localhost:5000';
+
+        const newSocket = io(socketConnection, {
             autoConnect: true,
             reconnection: true,
             reconnectionAttempts: 5,

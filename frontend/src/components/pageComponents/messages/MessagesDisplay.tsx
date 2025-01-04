@@ -26,7 +26,6 @@ const MessagesDisplay = () => {
         hasNextPage,
         fetchNextPage,
         isFetchingNextPage,
-        isLoading,
         isError,
     } = useInfiniteQuery({
         queryKey: ['getMessages', userId],
@@ -90,8 +89,8 @@ const MessagesDisplay = () => {
 
     return (
         <div onScroll={handleScroll} ref={scrollRef} className="h-[580px] overflow-y-scroll space-y-4 custom-scrollbar py-3"> 
+            {isFetchingNextPage && <LoadingSpinner />}
             {
-                isLoading ? <LoadingSpinner className="mt-4" /> : 
                 isError ? <p className="text-center text-muted-foreground mt-4">Failed to load  </p> :
                 getMessages?.pages?.slice().reverse()?.map((page) => 
                     page?.data.messages?.map((message: ConversationMessage) => {

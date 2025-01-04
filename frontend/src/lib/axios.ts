@@ -1,7 +1,9 @@
 import axios from 'axios';
 
+const isProduction = import.meta.env.VITE_ENVIRONMENT === 'production';
+
 const axiosFetch = axios.create({
-    baseURL: 'http://localhost:5000/api',
+    baseURL: isProduction ? '/api' : import.meta.env.VITE_BACKEND_URL
 }) 
 
 /** request interceptor to add the access token to the request header
