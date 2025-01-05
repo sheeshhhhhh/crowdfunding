@@ -8,6 +8,7 @@ import { PaymentService } from 'src/payment/payment.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { DonationDto } from './dto/donation.dto';
 import { StripeService } from 'src/stripe/stripe.service';
+import { Month } from 'date-fns/types';
 
 @Injectable()
 export class DonationService {
@@ -381,7 +382,7 @@ export class DonationService {
     let monthlyDonationsArray = [];
     for (let key in monthlyDonations) {
       monthlyDonationsArray.push({
-        month: enUS.localize.month(key, { width: 'abbreviated' }),
+        month: enUS.localize.month(parseInt(key, 10) as Month, { width: 'abbreviated' }),
         amount: monthlyDonations[key] || 0,
       });
     }
