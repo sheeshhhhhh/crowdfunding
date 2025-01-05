@@ -1,5 +1,6 @@
 import LoadingSpinner from '@/components/common/LoadingSpinner'
 import OpenGraph from '@/components/common/OpenGraph'
+import CampaignIdSkeleton from '@/components/loadingSkeletons/CampaignId'
 import CreateUpdate from '@/components/pageComponents/updates/CreateUpdate'
 import UpdateCard from '@/components/pageComponents/updates/UpdateCard'
 import ViewAllUpdates from '@/components/pageComponents/updates/ViewAllUpdates'
@@ -55,7 +56,7 @@ function RouteComponent() {
   // maybe create a s skeleton loader for the campaign details
   if(isLoading) {
     return (
-      <LoadingSpinner />
+      <CampaignIdSkeleton />
     )
   }
 

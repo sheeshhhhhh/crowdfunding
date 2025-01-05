@@ -1,5 +1,5 @@
-import LoadingSpinner from '@/components/common/LoadingSpinner'
 import ProtectedRoute from '@/components/common/ProtectedRoute'
+import { SettingsSkeleton } from '@/components/loadingSkeletons/SettingsSkeleton'
 import BillingInformation from '@/components/pageComponents/settings/BillingInformation'
 import ChangePassword from '@/components/pageComponents/settings/ChangePassword'
 import UserProfile from '@/components/pageComponents/settings/UserProfile'
@@ -33,7 +33,7 @@ function RouteComponent() {
   })
 
   if(isLoading) {
-    return <LoadingSpinner />
+    return <SettingsSkeleton />
   }
 
   if(isError || !initialData) {

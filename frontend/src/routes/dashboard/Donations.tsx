@@ -1,4 +1,5 @@
 import ProtectedRoute from '@/components/common/ProtectedRoute'
+import { DonationsSkeleton } from '@/components/loadingSkeletons/dashboard/DonationSkeleton'
 import DashboardSidebar from '@/components/pageComponents/dashboard/DashboardSidebar'
 import Donations, { DonationStastistics } from '@/components/pageComponents/dashboard/Donations'
 import axiosFetch from '@/lib/axios'
@@ -32,7 +33,7 @@ export const Route = createFileRoute('/dashboard/Donations')({
 function RouteComponent() {
     const { search, page } = useSearch({ from: '/dashboard/Donations' })
 
-    const { data } = useQuery({
+    const { data, isLoading } = useQuery({
         queryKey: ['donations', search, page],
         queryFn: async () => {
             const response = await axiosFetch.get(`/donation/mydonations?search=${search}&page=${page}`)
@@ -46,8 +47,12 @@ function RouteComponent() {
         <div className="w-full">
             <h1 className="text-4xl font-bold mb-8">Donations</h1>
             <DonationStastistics />
-            <Donations donations={data?.donations} hasNext={data?.hasNext} 
-            page={page} search={search} />
+            {isLoading ? (
+                <DonationsSkeleton />
+            ) : (
+                <Donations donations={data?.donations} hasNext={data?.hasNext} 
+                page={page} search={search} />
+            )}
         </div>
     )
 }

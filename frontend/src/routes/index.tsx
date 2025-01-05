@@ -2,7 +2,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuthContext } from '@/context/AuthContext';
 import { createFileRoute, Link } from '@tanstack/react-router';
-import heroPhoto from '../../public/herophoto.webp';
 
 export const Route = createFileRoute('/')({
   component: Index,
@@ -80,7 +79,7 @@ function Index() {
               <div className='mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28'>
                 <img
                   className="max-w-[620px] rounded-xl"
-                  src={heroPhoto}
+                  src={'/herophoto.webp'}
                   alt="People helping each other"
                 />
               </div>

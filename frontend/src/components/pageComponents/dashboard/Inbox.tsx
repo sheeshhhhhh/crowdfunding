@@ -5,6 +5,7 @@ import { useInfiniteQuery } from "@tanstack/react-query"
 import { useRef } from "react"
 import toast from "react-hot-toast"
 import NotificationCard from "./notification/NotificationCard"
+import InboxSkeleton from "@/components/loadingSkeletons/dashboard/InboxSkeleton"
 
 const fetchNotifications = async ({ pageParam = 1 }: { pageParam?: number }) => {
     const response = await axiosFetch.get(`/inbox/notifications?page=${pageParam}&filter=unread`);
@@ -48,29 +49,32 @@ const Inbox = () => {
                 <CardDescription>Manage your messages and notifications</CardDescription>
             </CardHeader>
             <CardContent>
-                <div
-                ref={scrollRef}
-                onScroll={handleScroll}
-                className="h-[715px] pr-4 overflow-y-auto custom-scrollbar"
-                >
-                    {isLoading ? (
-                        <LoadingSpinner className="mt-4" />
-                    ) : isError ? (
-                        <p className="text-center text-muted-foreground mt-4">Failed to load notifications</p>
-                    ) : (
-                        <div className="space-y-8">
-                            {data?.pages.map((page) =>
-                                page.data?.map((notification: any) => (
-                                    <NotificationCard key={notification.id} notification={notification} />
-                                ))
-                            )}
-                        </div>
-                    )}
-                    {!hasNextPage && !isLoading && (
-                        <p className="text-center text-muted-foreground mt-4">No more notifications</p>
-                    )}
-                    {isFetchingNextPage && <LoadingSpinner className="mt-4" />}
-                </div>
+                {isLoading ? (
+                    <InboxSkeleton />
+                ) : (
+                    <div
+                    ref={scrollRef}
+                    onScroll={handleScroll}
+                    className="h-[715px] pr-4 overflow-y-auto custom-scrollbar"
+                    >
+                        {isError ? (
+                            <p className="text-center text-muted-foreground mt-4">Failed to load notifications</p>
+                        ) : (
+                            <div className="space-y-8">
+                                {data?.pages.map((page) =>
+                                    page.data?.map((notification: any) => (
+                                        <NotificationCard key={notification.id} notification={notification} />
+                                    ))
+                                )}
+                            </div>
+                        )}
+                        {!hasNextPage && !isLoading && (
+                            <p className="text-center text-muted-foreground mt-4">No more notifications</p>
+                        )}
+                        {isFetchingNextPage && <LoadingSpinner className="mt-4" />}
+                    </div>
+                )
+                }
             </CardContent>
         </Card>
     );

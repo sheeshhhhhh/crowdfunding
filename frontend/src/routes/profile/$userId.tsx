@@ -1,4 +1,4 @@
-import LoadingSpinner from '@/components/common/LoadingSpinner'
+import ProfileSkeleton from '@/components/loadingSkeletons/ProfileSkeleton'
 import CampaignList from '@/components/pageComponents/profile/CampaignList'
 import ProfileHeader from '@/components/pageComponents/profile/ProfileHeader'
 import axiosFetch from '@/lib/axios'
@@ -28,9 +28,7 @@ function RouteComponent() {
     })
 
     if(isLoading) {
-        return <div>
-            <LoadingSpinner />
-        </div>
+        return <ProfileSkeleton />    
     }
 
     return (

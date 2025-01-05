@@ -1,5 +1,5 @@
-import LoadingSpinner from '@/components/common/LoadingSpinner'
 import ProtectedRoute from '@/components/common/ProtectedRoute'
+import CampaignsSkeleton from '@/components/loadingSkeletons/dashboard/CampaignsSkeleton'
 import Campaigns from '@/components/pageComponents/dashboard/Campaigns'
 import DashboardSidebar from '@/components/pageComponents/dashboard/DashboardSidebar'
 import { Button } from '@/components/ui/button'
@@ -32,6 +32,10 @@ function RouteComponent() {
     },
   })
 
+  if(isLoading) {
+    return <CampaignsSkeleton />
+  }
+
   return (
     <div className='space-y-4'>
       <header className='flex items-center justify-end'>
@@ -39,12 +43,7 @@ function RouteComponent() {
           <Button>Create Campaign</Button>
         </Link>
       </header>
-      {isLoading ? 
-        <div className='h-[464px] flex items-center justify-center'>
-          <LoadingSpinner className='w-8 h-8' />
-        </div>
-        : <Campaigns campaignData={mycampaigns} />
-      }
+      <Campaigns campaignData={mycampaigns} />
     </div>
   )
 }

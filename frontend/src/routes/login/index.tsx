@@ -3,13 +3,12 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { useAuthContext } from '@/context/AuthContext'
 import axiosFetch from '@/lib/axios'
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { Eye, EyeOff } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import facebookIcon from '../../../public/facebook.svg'
-import googleIcon from '../../../public/google.svg'
 
 export const Route = createFileRoute('/login/')({
   component: RouteComponent,
@@ -27,12 +26,17 @@ type LoginStateType = {
 
 function RouteComponent() {
   const { next } = Route.useSearch()
+  const { user } = useAuthContext()
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const { register, setError,  handleSubmit, formState: { errors } } = useForm<LoginStateType>()
   const navigate = useNavigate()
 
   useEffect(() => {
+    if(user) {
+      navigate({ to: next ? next : '/', reloadDocument: true })
+    }
+
     sessionStorage.removeItem('next') // clearing the next everytime the component is mounted
   }, [])
 
@@ -114,11 +118,11 @@ function RouteComponent() {
             </div>
             <Button type='button' className='w-full justify-start pl-40' variant='secondary' 
             onClick={() => OAuthLogin(`${import.meta.env.VITE_BACKEND_URL}/auth/google-login`, next ? next : '/')}>
-              <img src={googleIcon} className='w-5 h-5' /> Google
+              <img src={'/google.svg'} className='w-5 h-5' /> Google
             </Button>
             <Button type='button' className='w-full justify-start pl-40 mt-3' variant='secondary' 
             onClick={() => OAuthLogin(`${import.meta.env.VITE_BACKEND_URL}/auth/facebook-login`, next ? next : '/')}>
-              <img src={facebookIcon} className='w-5 h-5' /> Facebook
+              <img src={'/facebook.svg'} className='w-5 h-5' /> Facebook
             </Button>
           </CardFooter>
 

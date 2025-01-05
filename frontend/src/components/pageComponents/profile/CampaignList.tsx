@@ -30,30 +30,30 @@ const CampaignList = ({
                         return (
                             <Link reloadDocument to='/campaigns/$campaignId' params={{ campaignId: campaign.id }}>
                                 <Card key={campaign.id} className="relative w-full shadow-lg">
-                                <img
-                                src={campaign.headerImage}
-                                alt={campaign.title}
-                                className="rounded-t-lg"
-                                />
-                                <CardHeader>
+                                    <img
+                                    src={campaign.headerImage}
+                                    alt={campaign.title}
+                                    className="rounded-t-lg"
+                                    />
+                                    <CardHeader>
 
-                                    <CardTitle className="text-xl">{campaign.title}</CardTitle>
-                                </CardHeader>
-                                <CardContent className="flex-grow">
-                                {/* <p className="text-sm text-gray-600 mb-4">{campaign.description}</p> */}
-                                <div className="space-y-4">
-                                    <Progress value={progressPercentage} className="h-2" />
-                                    <div className="flex justify-between text-sm font-medium">
-                                    <span>${campaign.current.toLocaleString()} raised</span>
-                                    <span>${campaign.goal.toLocaleString()} goal</span>
-                                    </div>
-                                    <div className="flex justify-between items-center">
-                                    <span className="text-sm text-gray-600">{daysLeft} days left</span>
-                                    <Button size="sm">Donate Now</Button>
-                                    </div>
-                                </div>
-                                </CardContent>
-                            </Card>
+                                        <CardTitle className="text-xl">{campaign.title}</CardTitle>
+                                    </CardHeader>
+                                    <CardContent className="flex-grow">
+                                        {/* <p className="text-sm text-gray-600 mb-4">{campaign.description}</p> */}
+                                        <div className="space-y-4">
+                                            <Progress value={progressPercentage} className="h-2" />
+                                            <div className="flex justify-between text-sm font-medium">
+                                                <span>${campaign.current.toLocaleString()} raised</span>
+                                                <span>${campaign.goal.toLocaleString()} goal</span>
+                                            </div>
+                                            <div className="flex justify-between items-center">
+                                                <span className="text-sm text-gray-600">{daysLeft} days left</span>
+                                                <Button size="sm">Donate Now</Button>
+                                            </div>
+                                        </div>
+                                    </CardContent>
+                                </Card>
                             </Link>
                         )
                     })}

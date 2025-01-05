@@ -8,6 +8,7 @@ import { useSearch } from "@tanstack/react-router"
 import { useEffect, useRef } from "react"
 import toast from "react-hot-toast"
 import { fetchMessages, handleTimeTrasnform, updateMessages, updatePastConversations } from "./hooks/message.hook"
+import { MessageDisplaySkeleton } from "@/components/loadingSkeletons/MessageViewSkeleton"
 
 
 const MessagesDisplay = () => {
@@ -26,6 +27,7 @@ const MessagesDisplay = () => {
         hasNextPage,
         fetchNextPage,
         isFetchingNextPage,
+        isLoading,
         isError,
     } = useInfiniteQuery({
         queryKey: ['getMessages', userId],
@@ -63,7 +65,7 @@ const MessagesDisplay = () => {
             const { hasNextPage } = await fetchNextPage()
             
             if(!hasNextPage) return // to prevent scrolling to the botttom
-
+            
             scrollRef.current.scrollTop = scrollRef.current.scrollHeight
         }
     }
@@ -85,6 +87,10 @@ const MessagesDisplay = () => {
 
     if(!userId) {
         return
+    }
+
+    if(isLoading && !isFetchingNextPage) {
+        return <MessageDisplaySkeleton />
     }
 
     return (

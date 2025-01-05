@@ -10,6 +10,7 @@ import { useEffect, useRef, useState } from "react"
 import toast from "react-hot-toast"
 import { fetchPastConversations } from "./hooks/message.hook"
 import LoadingSpinner from "@/components/common/LoadingSpinner"
+import MessageListSkeleton from "@/components/loadingSkeletons/MessageListSkeleton"
 
 const MessageList = () => {
     const { conversationId, search } = useSearch({ from: '/messages/'})
@@ -21,7 +22,7 @@ const MessageList = () => {
         data: pastConversations,
         fetchNextPage,
         hasNextPage,
-        //isError,
+        isLoading,
         isFetchingNextPage,
     } = useInfiniteQuery({
         queryKey: ['pastConversations', search],
@@ -41,48 +42,51 @@ const MessageList = () => {
         }
     }
 
+    if(isLoading && !isFetchingNextPage) {
+        return <MessageListSkeleton />   
+    }
+
     return (
         <Card>
             <CardContent className="p-4">
                 <MessageSearch initialSearch={search} />
-                    <div onScroll={handleScroll} ref={scrollRef} className="space-y-5 h-[calc(100vh-16rem)] overflow-y-scroll custom-scrollbar">
-                        {pastConversations?.pages.map((page) => (
-                            page.data.map((conversation) => {
-                                const person = conversation.participants[0]
-                                const isMessageYours = conversation?.messages[0]?.senderId === user.id
-                                const isMessageRead = conversation?.messages[0]?.status === 'READ' || !isMessageYours
-
-                                return (
-                                    <Link to="/messages" search={{ userId: person.id, conversationId: conversation.id, search: search }}>
-                                        <div
-                                        key={conversation.id}
-                                        className={`p-3 mb-3 rounded-lg cursor-pointer hover:bg-gray-100 flex items-center ${
-                                        conversation.id === conversationId ? "bg-blue-50" : ""
-                                        }`}
-                                        >
-                                            <Avatar className="h-10 w-10 mr-3">
-                                                <AvatarImage src={person.profile || ''} alt={person.username} />
-                                                <AvatarFallback>{person.username[0] || 'A'}</AvatarFallback>
-                                            </Avatar>
-                                            <div className="flex-grow">
-                                                <div className="flex justify-between items-start mb-1">
-                                                    <h3 className="font-semibold">{person.username}</h3>
-                                                    {isMessageRead && (
-                                                        <span className="bg-blue-500 rounded-full w-2 h-2"></span>
-                                                    )}
-                                                </div>
-                                                <p className="text-sm text-gray-600 truncate">
-                                                    {isMessageYours && 'You: '}
-                                                    {conversation.messages[0]?.message}
-                                                </p>
+                <div onScroll={handleScroll} ref={scrollRef} className="space-y-5 h-[calc(100vh-16rem)] overflow-y-scroll custom-scrollbar">
+                    {pastConversations?.pages.map((page) => (
+                        page.data.map((conversation) => {
+                            const person = conversation.participants[0]
+                            const isMessageYours = conversation?.messages[0]?.senderId === user.id
+                            const isMessageRead = conversation?.messages[0]?.status === 'READ' || !isMessageYours
+                            return (
+                                <Link to="/messages" search={{ userId: person.id, conversationId: conversation.id, search: search }}>
+                                    <div
+                                    key={conversation.id}
+                                    className={`p-3 mb-3 rounded-lg cursor-pointer hover:bg-gray-100 flex items-center ${
+                                    conversation.id === conversationId ? "bg-blue-50" : ""
+                                    }`}
+                                    >
+                                        <Avatar className="h-10 w-10 mr-3">
+                                            <AvatarImage src={person.profile || ''} alt={person.username} />
+                                            <AvatarFallback>{person.username[0] || 'A'}</AvatarFallback>
+                                        </Avatar>
+                                        <div className="flex-grow">
+                                            <div className="flex justify-between items-start mb-1">
+                                                <h3 className="font-semibold">{person.username}</h3>
+                                                {isMessageRead && (
+                                                    <span className="bg-blue-500 rounded-full w-2 h-2"></span>
+                                                )}
                                             </div>
+                                            <p className="text-sm text-gray-600 truncate">
+                                                {isMessageYours && 'You: '}
+                                                {conversation.messages[0]?.message}
+                                            </p>
                                         </div>
-                                    </Link>
-                                )
-                            })
-                        ))}
-                        {isFetchingNextPage && <LoadingSpinner className="mt-2" />}
-                    </div>
+                                    </div>
+                                </Link>
+                            )
+                        })
+                    ))}
+                    {isFetchingNextPage && <LoadingSpinner className="mt-2" />}
+                </div>
             </CardContent>
         </Card>
     )

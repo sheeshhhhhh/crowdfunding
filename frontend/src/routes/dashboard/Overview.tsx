@@ -1,4 +1,5 @@
 import ProtectedRoute from '@/components/common/ProtectedRoute'
+import OverviewSkeleton from '@/components/loadingSkeletons/dashboard/OverviewSkeleton'
 import DashboardSidebar from '@/components/pageComponents/dashboard/DashboardSidebar'
 import Overview from '@/components/pageComponents/dashboard/Overview'
 import axiosFetch from '@/lib/axios'
@@ -41,6 +42,9 @@ function RouteComponent() {
     refetchOnWindowFocus: false
   })
 
+  if(isLoading) {
+    return <OverviewSkeleton />
+  }
 
   return (
     <div className='w-full'>

@@ -1,3 +1,4 @@
+import BrowseSkeleton from '@/components/loadingSkeletons/browse'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
@@ -115,11 +116,11 @@ function SearchInput() {
 
 function RouteComponent() {
   const { search, filter } = Route.useSearch() 
-  const { data: campaigns } = useQuery({
+  const { data: campaigns, isLoading } = useQuery({
     queryKey: ['campaigns', search, filter],
     queryFn: async () => {
       const response = await axiosFetch.get(`/campaign/browse-campaigns?search=${search}&filter=${filter}`)
-      
+
       return response.data as CampaignPost[]
     },
     refetchOnWindowFocus: false
@@ -136,7 +137,9 @@ function RouteComponent() {
       <SearchInput />
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
 
-        {campaigns?.map((campaign) => {
+        {isLoading ? (
+          <BrowseSkeleton />
+        ) : campaigns?.map((campaign) => {
           const date = campaign.endDate && differenceInCalendarDays(new Date(campaign.endDate), new Date())
           const endDateText = date ? (date < 0 ? 'Ended' : `${date} days left`) : 'No EndDate'
 

@@ -1,3 +1,4 @@
+import { DonationStastisticsSkeleton } from "@/components/loadingSkeletons/dashboard/DonationSkeleton"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -14,7 +15,7 @@ import { memo, useEffect, useState } from "react"
 
 export const DonationStastistics = memo(() => {
     
-    const { data } = useQuery({
+    const { data, isLoading } = useQuery({
         queryKey: ['donationStatistics'],
         queryFn: async () => {
             const response = await axiosFetch.get('/donation/Statistics')
@@ -23,27 +24,30 @@ export const DonationStastistics = memo(() => {
         refetchOnWindowFocus: false
     })
 
+    if(isLoading) {
+        return <DonationStastisticsSkeleton />
+    }
 
     return (
         <Card className="mb-8">
             <CardHeader>
-            <CardTitle className="text-2xl">Donation Statistics</CardTitle>
+                <CardTitle className="text-2xl">Donation Statistics</CardTitle>
             </CardHeader>
             <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div>
-                    <h3 className="text-xl font-semibold mb-2">Total Donations</h3>
-                <p className="text-4xl font-bold">${data?.totalDonations}</p>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <h3 className="text-xl font-semibold mb-2">Total Donations</h3>
+                        <p className="text-4xl font-bold">${data?.totalDonations}</p>
+                    </div>
+                    <div>
+                        <h3 className="text-xl font-semibold mb-2">Average Donation</h3>
+                        <p className="text-4xl font-bold">${data?.averageDonation?.toFixed(2)}</p>
+                    </div>
+                    <div>
+                        <h3 className="text-xl font-semibold mb-2">Total Donors</h3>
+                        <p className="text-4xl font-bold">{data?.totalDonors}</p>
+                    </div>
                 </div>
-                <div>
-                    <h3 className="text-xl font-semibold mb-2">Average Donation</h3>
-                <p className="text-4xl font-bold">${data?.averageDonation}</p>
-                </div>
-                <div>
-                    <h3 className="text-xl font-semibold mb-2">Total Donors</h3>
-                <p className="text-4xl font-bold">{data?.totalDonors}</p>
-                </div>
-            </div>
             </CardContent>
         </Card>
     )
@@ -79,19 +83,21 @@ const Donations = ({
         })
     }, [searchDebounce])
     
+    
+
     return (
         <div className="w-full">
             
             {/* Header */}
             <div className="flex justify-between items-center mb-6">
                 <div className="relative w-full md:w-96">
-                <Search className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
-                <Input
-                    placeholder="Search Donors"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 py-6 text-lg"
-                />
+                    <Search className="absolute left-3 top-4 h-5 w-5 text-muted-foreground" />
+                    <Input
+                        placeholder="Search Donors"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="pl-10 py-6 text-lg"
+                    />
                 </div>
                 {/* maybe add select on specific campaign? */}
             </div>
@@ -101,15 +107,15 @@ const Donations = ({
 
                     <TableHeader>
                         <TableRow>
-                        <TableHead className="text-lg">Donor</TableHead>
-                        <TableHead className="text-lg cursor-pointer">
-                            Amount 
-                        </TableHead>
-                        <TableHead className="text-lg">Campaign</TableHead>
-                        <TableHead className="text-lg cursor-pointer">
-                            Date 
-                        </TableHead>
-                        <TableHead className="text-lg">Status</TableHead>
+                            <TableHead className="text-lg">Donor</TableHead>
+                            <TableHead className="text-lg cursor-pointer">
+                                Amount 
+                            </TableHead>
+                            <TableHead className="text-lg">Campaign</TableHead>
+                            <TableHead className="text-lg cursor-pointer">
+                                Date 
+                            </TableHead>
+                            <TableHead className="text-lg">Status</TableHead>
                         </TableRow>
                     </TableHeader>
 
@@ -119,8 +125,8 @@ const Donations = ({
                             <TableCell className="text-base">
                             <div className="flex items-center">
                                 <Avatar className="h-10 w-10 mr-3">
-                                <AvatarImage src={donation.user?.profile || ''} />
-                                <AvatarFallback>{donation.user?.username[0] || 'A'}</AvatarFallback>
+                                    <AvatarImage src={donation.user?.profile || ''} />
+                                    <AvatarFallback>{donation.user?.username[0] || 'A'}</AvatarFallback>
                                 </Avatar>
                                 {donation.user?.username || 'Anonymous'}
                             </div>
@@ -147,24 +153,24 @@ const Donations = ({
                     Page {page}
                 </p>
                 <div className="flex items-center space-x-4">
-                <Button
-                    variant="outline"
-                    size="lg"
-                    onClick={() => navigate({ search: (prev) => ({...prev, page: page - 1 }) })}
-                    disabled={page === 1}
-                >
-                    <ChevronLeft className="h-5 w-5 mr-2" />
-                    Previous
-                </Button>
-                <Button
-                    variant="outline"
-                    size="lg"
-                    onClick={() => navigate({ search: (prev) => ({...prev, page: page + 1 }) })}
-                    disabled={!hasNext}
-                >
-                    Next
-                    <ChevronRight className="h-5 w-5 ml-2" />
-                </Button>
+                    <Button
+                        variant="outline"
+                        size="lg"
+                        onClick={() => navigate({ search: (prev) => ({...prev, page: page - 1 }) })}
+                        disabled={page === 1}
+                    >
+                        <ChevronLeft className="h-5 w-5 mr-2" />
+                        Previous
+                    </Button>
+                    <Button
+                        variant="outline"
+                        size="lg"
+                        onClick={() => navigate({ search: (prev) => ({...prev, page: page + 1 }) })}
+                        disabled={!hasNext}
+                    >
+                        Next
+                        <ChevronRight className="h-5 w-5 ml-2" />
+                    </Button>
                 </div>
             </div>
         </div>

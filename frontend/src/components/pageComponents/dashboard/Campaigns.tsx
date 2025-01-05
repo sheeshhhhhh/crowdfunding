@@ -30,13 +30,13 @@ const Campaigns = ({
                     </CardHeader>
                     <CardContent>
                         <div className="space-y-2">
-                        <CardDescription>
-                            Campaign Progress <Badge className="ml-5">{campaign.status}</Badge>
-                        </CardDescription>
+                            <CardDescription>
+                                Campaign Progress <Badge className="ml-5">{campaign.status}</Badge>
+                            </CardDescription>
                             <Progress value={(campaign.raised / campaign.goal) * 100} />
                             <div className="flex justify-between text-sm text-muted-foreground">
-                            <span>{"$" + campaign.current + " raised"}</span>
-                            <span>{"$" + campaign.goal + " goal"}</span>
+                                <span>{"$" + campaign.current + " raised"}</span>
+                                <span>{"$" + campaign.goal + " goal"}</span>
                             </div>
                         </div>
                     </CardContent>
